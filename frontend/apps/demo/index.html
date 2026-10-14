@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="stylesheet" href="/public/ux.css">
+<script defer src="/public/ux.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NFINITY HQ</title>
+<!-- ─── Security headers (set the same values at the edge/CDN as real HTTP headers) ───
+     'unsafe-inline' for scripts is required because this demo uses many inline
+     onclick handlers. Production must move to event delegation + nonces and
+     drop 'unsafe-inline'. Remote scripts are still blocked. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<script src="/public/runtime-config.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="demo.css">
+</head>
+<body>
+<div id="app">
+
+<!-- ═══════════════════════ SIDEBAR ═══════════════════════ -->
+<aside id="sidebar" aria-label="Workspace navigation">
+  <div class="sb-logo">
+    <div class="sb-mark" id="sb-mark">N</div>
+    <span class="sb-brand">NFINITY HQ</span>
+  </div>
+  <nav>
+    <div class="nav-section">CORE OS</div>
+    <button class="nav-btn active" data-page="dashboard"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg></span>Dashboard</button>
+    <button class="nav-btn" data-page="tasks"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3 3 6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Tasks<span class="nav-badge" id="nb-tasks">4</span></button>
+    <button class="nav-btn" data-page="crm"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><circle cx="9" cy="4" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 12c0-2.2 1.8-4 4-4s4 1.8 4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 10c.6-.6 1.3-1 2-1 1.7 0 3 1.3 3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>CRM</button>
+    <button class="nav-btn" data-page="team"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="4" r="2.2" stroke="currentColor" stroke-width="1.3"/><path d="M2.5 12c0-2.5 2-4.5 4.5-4.5s4.5 2 4.5 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>Team Members</button>
+    <button class="nav-btn" data-page="uploads"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 4a1 1 0 011-1h3l1.5 2H12a1 1 0 011 1v5a1 1 0 01-1 1H2a1 1 0 01-1-1V4z" stroke="currentColor" stroke-width="1.3"/></svg></span>Uploads</button>
+    <button class="nav-btn" data-page="notifications"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 014 4v3l1 2H2l1-2V5a4 4 0 014-4z" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 10a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.3"/></svg></span>Notifications<span class="nav-badge" id="nb-notif">3</span></button>
+    <button class="nav-btn" data-page="analytics"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="8" width="3" height="4" rx=".5" stroke="currentColor" stroke-width="1.3"/><rect x="5.5" y="5" width="3" height="7" rx=".5" stroke="currentColor" stroke-width="1.3"/><rect x="10" y="2" width="3" height="10" rx=".5" stroke="currentColor" stroke-width="1.3"/></svg></span>Analytics</button>
+    <div class="nav-section" style="margin-top:.5rem">OPS</div>
+    <button class="nav-btn" data-page="outreach"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="8" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 4l6 4 6-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>Outreach</button>
+    <button class="nav-btn" data-page="pipeline"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 11l4-4 3 2 5-6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Pipeline</button>
+    <button class="nav-btn" data-page="simulator"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M8 1L3 8h4l-1 5 6-7H8L9 1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Automation</button>
+    <div class="nav-section" style="margin-top:.5rem">AI</div>
+    <button class="nav-btn" data-page="roi"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.3"/><path d="M7 4v6M5.5 5.5h2a1 1 0 010 2h-1a1 1 0 000 2h2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>ROI Dashboard</button>
+    <button class="nav-btn" data-page="virtual"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 12c0-2.8 2.2-5 5-5s5 2.2 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="11" cy="4" r="1.2" fill="currentColor" opacity=".6"/><path d="M11 2.5v1M11 5.5v1M12.5 4H11.5M9.5 4H10.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg></span>Virtual Employees</button>
+    <button class="nav-btn" data-page="settings"><span class="nav-ic"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="2" stroke="currentColor" stroke-width="1.3"/><path d="M7 1v1.5M7 11.5V13M13 7h-1.5M2.5 7H1M11.2 2.8l-1.1 1.1M3.9 10.1l-1.1 1.1M11.2 11.2l-1.1-1.1M3.9 3.9L2.8 2.8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>Settings</button>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="sb-av" id="sb-av">D</div>
+      <div>
+        <div class="sb-uname" id="sb-uname">Demo User</div>
+        <div class="sb-uemail" id="sb-uemail">demo@nfinityhq.com</div>
+      </div>
+    </div>
+    <button class="logout-btn" id="logout-btn">Logout</button>
+  </div>
+</aside>
+
+<div id="overlay"></div>
+
+<!-- ═══════════════════════ MAIN ═══════════════════════ -->
+<div id="main">
+  <header id="topnav">
+    <div class="tn-left">
+      <button id="menu-toggle"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M2 9h14M2 14h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>
+      <span class="top-date" id="dash-date"></span>
+    </div>
+    <div class="tn-right">
+      <div style="position:relative">
+        <button class="tn-btn" id="notif-btn" title="Notifications" style="display:flex;align-items:center;justify-content:center;width:36px;height:36px">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2a5.5 5.5 0 015.5 5.5v3.5l1.5 2.5h-14L3.5 11V7.5A5.5 5.5 0 019 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M7.2 13.5a1.8 1.8 0 003.6 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <span class="notif-dot" id="notif-dot" style="display:none"></span>
+        </button>
+        <div class="notif-dropdown-panel" id="notif-dropdown-panel"></div>
+      </div>
+      <div class="tn-user">
+        <div class="tn-av" id="tn-av">D</div>
+        <span class="tn-name" id="tn-name">Demo User</span>
+      </div>
+    </div>
+  </header>
+
+  <div id="content">
+
+  <!-- ════════════════════ DASHBOARD ════════════════════ -->
+  <section class="page active" id="page-dashboard">
+    <div class="ph">
+      <h2>Dashboard</h2>
+    </div>
+    <div class="cards-grid">
+      <div class="stat amber" style="cursor:pointer" onclick="openMetricModal('tasks')"><div class="stat-label">Active Tasks</div><div class="stat-val" id="dc-tasks">4</div><div class="stat-sub">2 due today</div><div class="stat-trend warn"> 1 overdue</div></div>
+      <div class="stat red" style="cursor:pointer" onclick="openMetricModal('alerts')"><div class="stat-label">Compliance Alerts</div><div class="stat-val" id="dc-alerts">3</div><div class="stat-sub">Licenses · Filings · Reviews</div><div class="stat-trend down">↑ Needs attention</div></div>
+      <div class="stat blue" style="cursor:pointer" onclick="openMetricModal('docs')"><div class="stat-label">Docs Pending</div><div class="stat-val" id="dc-docs">7</div><div class="stat-sub">Uploaded this week</div><div class="stat-trend up">↑ 3 new</div></div>
+      <div class="stat green" style="cursor:pointer" onclick="openMetricModal('hours')"><div class="stat-label">Hours Saved</div><div class="stat-val" id="dc-hours">38</div><div class="stat-sub">Automated this month</div><div class="stat-trend up">↑ +12 vs last month</div></div>
+      <div class="stat violet" style="cursor:pointer" onclick="openMetricModal('workflows')"><div class="stat-label">Workflows Run</div><div class="stat-val" id="dc-workflows">21</div><div class="stat-sub">Automation engine</div><div class="stat-trend up">↑ 5 this week</div></div>
+      <div class="stat green" style="cursor:pointer" onclick="openMetricModal('revenue')"><div class="stat-label">Revenue Recovered</div><div class="stat-val" id="dc-revenue">$4.2k</div><div class="stat-sub">Overdue invoices</div><div class="stat-trend up">↑ This month</div></div>
+    </div>
+    <div class="dash-cols">
+      <div>
+        <div class="panel">
+          <div class="panel-hd"><span class="panel-title">Active Alerts</span><button class="panel-act" onclick="navigate('notifications')">View all</button></div>
+          <div class="panel-body">
+            <div class="alert-list">
+              <div class="alert-row red"><span class="alert-icon alert-dot red-dot"></span><span class="alert-text"><strong>Certification Expired</strong> — Jordan Reyes · Expired 148 days ago. Renewal required immediately.</span></div>
+              <div class="alert-row red"><span class="alert-icon alert-dot red-dot"></span><span class="alert-text"><strong>Invoice Overdue</strong> — INV-2231 · Echo Global · $2,650 · 18 days outstanding.</span></div>
+              <div class="alert-row amber"><span class="alert-icon alert-dot amber-dot"></span><span class="alert-text"><strong>License Renewal</strong> — Tony Marsh · Expires in 22 days. Schedule now.</span></div>
+              <div class="alert-row amber"><span class="alert-icon alert-dot amber-dot"></span><span class="alert-text"><strong>Q2 Regulatory Filing</strong> — Due Jul 31. 49 days remaining.</span></div>
+              <div class="alert-row green"><span class="alert-icon alert-dot green-dot"></span><span class="alert-text"><strong>Insurance Policy</strong> — Renewed · Valid through Jan 2027.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-hd"><span class="panel-title">Recent Activity</span><button class="panel-act" onclick="clearFeed()">Clear</button></div>
+          <div class="panel-body" style="padding-top:0;padding-bottom:0">
+            <div class="activity-list" id="activity-feed">
+              <div class="act-item"><div class="act-dot red"></div><div class="act-text"><strong>Compliance alert triggered</strong> — Certification for Jordan Reyes expired. Task auto-created by automation engine.</div><div class="act-time">2m ago</div></div>
+              <div class="act-item"><div class="act-dot amber"></div><div class="act-text"><strong>Invoice overdue</strong> — INV-2231 · Echo Global · $2,650 unpaid 18 days. Follow-up required.</div><div class="act-time">14m ago</div></div>
+              <div class="act-item"><div class="act-dot blue"></div><div class="act-text"><strong>Document uploaded</strong> — Service Agreement JB-4824 uploaded by Sandra Liu.</div><div class="act-time">1h ago</div></div>
+              <div class="act-item"><div class="act-dot green"></div><div class="act-text"><strong>Task completed</strong> — "Renew IRP registration" marked done by Admin User.</div><div class="act-time">3h ago</div></div>
+              <div class="act-item"><div class="act-dot violet"></div><div class="act-text"><strong>Prospect added</strong> — Apex Solutions LLC moved to Qualified stage in pipeline.</div><div class="act-time">5h ago</div></div>
+              <div class="act-item"><div class="act-dot blue"></div><div class="act-text"><strong>Job dispatched</strong> — JB-4821 · Marcus Webb · Chicago, IL → Atlanta, GA.</div><div class="act-time">8h ago</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="panel">
+          <div class="panel-hd"><span class="panel-title">Quick Actions</span></div>
+          <div class="panel-body">
+            <div class="qa-list">
+              <button class="qa-btn" onclick="openModal('task')"><span><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2 6.5l3 3 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Create Task</button>
+              <button class="qa-btn" onclick="navigate('uploads')"><span><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 3.5a1 1 0 011-1h2.5l1.5 2H11a1 1 0 011 1v4a1 1 0 01-1 1H2a1 1 0 01-1-1v-6z" stroke="currentColor" stroke-width="1.3"/></svg></span> Upload Document</button>
+              <button class="qa-btn" onclick="navigate('crm')"><span><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="4.5" cy="3.5" r="1.8" stroke="currentColor" stroke-width="1.3"/><circle cx="8.5" cy="3.5" r="1.8" stroke="currentColor" stroke-width="1.3"/><path d="M1 11c0-2 1.6-3.5 3.5-3.5s3.5 1.5 3.5 3.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M8.5 9c.5-.5 1.2-.9 2-.9 1.4 0 2.5 1.1 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span> Open CRM</button>
+              <button class="qa-btn" onclick="openModal('prospect')"><span><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 10l3.5-4 3 2 4.5-5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Add Prospect</button>
+              <button class="qa-btn" onclick="navigate('simulator')"><span><svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M7.5 1L3 7.5h4L6 12l7-6.5H9L10 1z" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Run Automation</button>
+            </div>
+            <div class="sim-panel">
+              <div class="sim-panel-title">Trigger Automation</div>
+              <div class="sim-panel-btns">
+                <button class="sim-panel-btn" onclick="simulateIssue('compliance')">Compliance Expiry</button>
+                <button class="sim-panel-btn" onclick="simulateIssue('invoice')">Invoice Overdue</button>
+                <button class="sim-panel-btn" onclick="simulateIssue('task')">Escalate Task</button>
+                <button class="sim-panel-btn" onclick="runScenario('opportunity')">New Lead</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ TASKS ════════════════════ -->
+  <!-- TASK DETAIL DRAWER -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeTaskDrawer()"></div>
+  <div class="task-detail-drawer" id="task-detail-drawer">
+    <div class="tdd-header">
+      <div class="tdd-title">Task Details</div>
+      <button class="tdd-close" onclick="closeTaskDrawer()">&#x2715;</button>
+    </div>
+    <div class="tdd-body" id="tdd-body"></div>
+    <div class="tdd-footer">
+      <button class="btn-primary" onclick="saveTaskDrawer()">Save Changes</button>
+      <button class="btn-outline" onclick="closeTaskDrawer()">Cancel</button>
+      <button class="btn-danger btn-sm" id="tdd-delete-btn">Delete Task</button>
+    </div>
+  </div>
+
+  <section class="page" id="page-tasks">
+    <div class="ph">
+      <h2>Tasks</h2>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <div class="view-toggle">
+          <button class="vtab active" onclick="setTaskView('list',this)" id="vtab-list"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:.3rem"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>List</button>
+          <button class="vtab" onclick="setTaskView('calendar',this)" id="vtab-calendar"><svg width="11" height="11" viewBox="0 0 11 11" fill="none" style="vertical-align:middle;margin-right:.2rem"><rect x=".5" y="2" width="10" height="8.5" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M.5 5h10" stroke="currentColor" stroke-width="1.1"/><path d="M3 1v2M8 1v2" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>Cal</button>
+        </div>
+        <button class="btn-primary" onclick="openModal('task')">+ Add Task</button>
+      </div>
+    </div>
+    <div class="search-row">
+      <input class="search-input" placeholder="Search tasks..." id="task-search" oninput="renderTasks()">
+      <select class="field-select" id="task-sort" onchange="renderTasks()" style="width:auto;background:var(--card);font-size:.82rem;padding:.5rem .75rem">
+        <option value="due">Sort: Due Date</option>
+        <option value="priority">Sort: Priority</option>
+        <option value="status">Sort: Status</option>
+      </select>
+    </div>
+    <div class="filters" id="task-filters">
+      <button class="fpill active" onclick="setTaskFilter('all',this)">All</button>
+      <button class="fpill" onclick="setTaskFilter('open',this)">Open</button>
+      <button class="fpill" onclick="setTaskFilter('done',this)">Done</button>
+      <button class="fpill" onclick="setTaskFilter('high',this)">High Priority</button>
+      <button class="fpill" onclick="setTaskFilter('medium',this)">Medium</button>
+      <button class="fpill" onclick="setTaskFilter('compliance',this)">Compliance</button>
+      <button class="fpill" onclick="setTaskFilter('finance',this)">Finance</button>
+    </div>
+    <div id="task-list-view"></div>
+
+    <div id="task-calendar-view" style="display:none"></div>
+  </section>
+
+  <!-- ════════════════════ CRM ════════════════════ -->
+  <section class="page" id="page-crm">
+    <div class="ph"><h2>CRM</h2><button class="btn-primary" id="crm-action-btn" onclick="handleCrmAction()">+ Add Contact</button></div>
+    <div class="crm-tabs">
+      <button class="crm-tab active" onclick="setCrmTab('contacts',this)">Contacts</button>
+      <button class="crm-tab" onclick="setCrmTab('companies',this)">Companies</button>
+      <button class="crm-tab" onclick="setCrmTab('deals',this)">Deals</button>
+      <button class="crm-tab" onclick="setCrmTab('proposals',this)">Proposals</button>
+      <button class="crm-tab" onclick="setCrmTab('meetings',this)">Meetings</button>
+      <button class="crm-tab" onclick="setCrmTab('interactions',this)">Activity</button>
+    </div>
+    <div id="crm-contacts-tab">
+      <div class="search-row"><input class="search-input" placeholder="Search contacts..." id="crm-search" oninput="renderContacts()"><button class="btn-outline" onclick="renderContacts()">Refresh</button></div>
+      <div class="contact-grid" id="contact-grid"></div>
+    </div>
+    <div id="crm-companies-tab" style="display:none"></div>
+    <div id="crm-deals-tab" style="display:none"></div>
+    <div id="crm-proposals-tab" style="display:none"></div>
+    <div id="crm-meetings-tab" style="display:none"></div>
+    <div id="crm-interactions-tab" style="display:none"></div>
+  </section>
+
+  <!-- ════════════════════ TEAM MEMBERS ════════════════════ -->
+  <section class="page" id="page-team">
+    <div class="ph">
+      <h2>Team Members</h2>
+      <button class="btn-primary" id="team-add-btn" onclick="teamOpenNew()">+ New Employee</button>
+    </div>
+    <div id="team-mode-note" style="font-size:.78rem;color:var(--dim);margin:-.4rem 0 .9rem"></div>
+    <div class="search-row"><input class="search-input" placeholder="Search team members..." id="team-search" oninput="renderTeam()"><button class="btn-outline" onclick="renderTeam()">Refresh</button></div>
+    <div id="team-list"></div>
+  </section>
+
+  <!-- ════════════════════ OUTREACH ════════════════════ -->
+  <section class="page" id="page-outreach">
+    <div class="ph"><h2>Outreach</h2><button class="btn-primary" onclick="openModal('prospect')">+ Add Prospect</button></div>
+    <div class="outreach-stats-bar" id="outreach-stats-bar"></div>
+    <div class="search-row">
+      <input class="search-input" placeholder="Search prospects by company, contact, status..." id="outreach-search" oninput="renderOutreach()">
+      <button class="btn-outline" onclick="document.getElementById('outreach-search').value='';renderOutreach()">Clear</button>
+    </div>
+    <div class="filters" id="outreach-filters">
+      <button class="fpill active" onclick="setOutreachFilter('all',this)">All</button>
+      <button class="fpill" onclick="setOutreachFilter('not_contacted',this)">Not Contacted</button>
+      <button class="fpill" onclick="setOutreachFilter('contacted',this)">Contacted</button>
+      <button class="fpill" onclick="setOutreachFilter('interested',this)">Interested</button>
+      <button class="fpill" onclick="setOutreachFilter('meeting_booked',this)">Meeting Booked</button>
+      <button class="fpill" onclick="setOutreachFilter('proposal_sent',this)">Proposal Sent</button>
+      <button class="fpill" onclick="setOutreachFilter('closed',this)">Closed</button>
+    </div>
+    <div id="outreach-list"></div>
+  </section>
+
+  <!-- ════════════════════ PIPELINE ════════════════════ -->
+  <section class="page" id="page-pipeline">
+    <div class="ph"><h2>Client Pipeline</h2><button class="btn-primary" onclick="openModal('deal')">+ Add Deal</button></div>
+    <div class="pip-total-bar" id="pip-total-bar"></div>
+    <div style="font-size:.82rem;color:var(--dim);margin-bottom:1rem">Drag cards between columns to update deal stage.</div>
+    <div class="pipeline-board" id="pipeline-board"></div>
+  </section>
+
+  <!-- ════════════════════ UPLOADS ════════════════════ -->
+  <section class="page" id="page-uploads">
+    <div class="ph"><h2>Document Management</h2><button class="btn-primary" onclick="triggerUpload()">+ Upload</button></div>
+    <div class="upload-zone" id="upload-zone">
+      <div class="upload-zone-icon" id="upload-zone-icon"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M4 10a3 3 0 013-3h5l2 3h10a3 3 0 013 3v10a3 3 0 01-3 3H7a3 3 0 01-3-3V10z" stroke="currentColor" stroke-width="1.5"/><path d="M16 14v7M13 17l3-3 3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div class="upload-zone-text" id="upload-zone-text">Drag &amp; drop files here</div>
+      <div class="upload-zone-sub" id="upload-zone-sub">PDF, images, spreadsheets — or click to browse</div>
+      <div class="upload-chips">
+        <span class="upload-chip">PDF</span><span class="upload-chip">JPG/PNG</span>
+        <span class="upload-chip">XLSX/CSV</span><span class="upload-chip">DOCX</span>
+      </div>
+    </div>
+    <div class="upload-cat-row">
+      <label>Default category for new uploads:</label>
+      <select class="upload-cat-select" id="upload-cat-default">
+        <option value="Compliance">Compliance</option>
+        <option value="Finance">Finance</option>
+        <option value="Operations" selected>Operations</option>
+        <option value="Legal">Legal</option>
+        <option value="HR">HR</option>
+      </select>
+    </div>
+    <div class="upload-stats-row" id="upload-stats-row"></div>
+    <div class="search-row">
+      <input class="search-input" placeholder="Search by filename, type, tag, or category..." id="file-search" oninput="renderFiles()">
+      <button class="btn-outline" onclick="document.getElementById('file-search').value='';renderFiles()">Clear</button>
+    </div>
+    <div class="filters">
+      <button class="fpill active" onclick="setFileFilter('all',this)">All Files</button>
+      <button class="fpill" onclick="setFileFilter('PDF',this)">PDFs</button>
+      <button class="fpill" onclick="setFileFilter('Image',this)">Images</button>
+      <button class="fpill" onclick="setFileFilter('Sheet',this)">Spreadsheets</button>
+      <button class="fpill" onclick="setFileFilter('Compliance',this)">Compliance</button>
+      <button class="fpill" onclick="setFileFilter('Finance',this)">Finance</button>
+      <button class="fpill" onclick="setFileFilter('Operations',this)">Operations</button>
+      <button class="fpill" onclick="setFileFilter('completed',this)">Completed</button>
+      <button class="fpill" onclick="setFileFilter('flagged',this)">Flagged</button>
+    </div>
+    <div id="file-list"></div>
+    <input type="file" id="file-input" style="display:none" multiple onchange="handleFileInput(this)">
+  </section>
+
+  <!-- ════════════════════ ANALYTICS ════════════════════ -->
+  <section class="page" id="page-analytics">
+    <div class="ph"><h2>Analytics</h2>
+      <div style="display:flex;gap:.5rem">
+        <div class="view-toggle">
+          <button class="vtab active" onclick="setAnalyticsTab('overview',this)">Overview</button>
+          <button class="vtab" onclick="setAnalyticsTab('tasks',this)">Tasks</button>
+          <button class="vtab" onclick="setAnalyticsTab('compliance',this)">Compliance</button>
+          <button class="vtab" onclick="setAnalyticsTab('uploads',this)">Uploads</button>
+        </div>
+        <button class="btn-outline" onclick="toast('Report export is a demo preview')">Export</button>
+      </div>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="analytics-overview">
+      <div class="roi-grid">
+        <div class="stat green" style="cursor:pointer" onclick="showInfoModal('💵','Revenue This Month','<p style=&quot;color:var(--subtle);line-height:1.7&quot;>Total revenue processed this month: <strong style=&quot;color:var(--heading)&quot;>$18.2k</strong>. Up 14% vs last month. Driven by 3 new client invoices and improved follow-up on outstanding payments.</p>')"><div class="stat-label">Revenue This Month</div><div class="stat-val">$18.2k</div><div class="stat-trend up">&#8593; +14% vs last month</div></div>
+        <div class="stat amber" style="cursor:pointer" onclick="showInfoModal('📄','Open Invoices','<p style=&quot;color:var(--subtle);line-height:1.7&quot;>You have <strong style=&quot;color:var(--heading)&quot;>$7.5k</strong> in outstanding invoices across 3 clients. INV-2231 (Echo Global, $2,650) is 18 days overdue and requires immediate follow-up.</p>')"><div class="stat-label">Open Invoices</div><div class="stat-val">$7.5k</div><div class="stat-trend warn">3 outstanding</div></div>
+        <div class="stat blue" style="cursor:pointer" onclick="showInfoModal('✅','On-Time Deliveries','<p style=&quot;color:var(--subtle);line-height:1.7&quot;><strong style=&quot;color:var(--heading)&quot;>94%</strong> of deliverables and tasks completed on time. This is a 2% improvement over last month, driven by automation-created tasks with clear due dates and assignees.</p>')"><div class="stat-label">On-Time Deliveries</div><div class="stat-val">94%</div><div class="stat-trend up">&#8593; 2% improvement</div></div>
+        <div class="stat green" style="cursor:pointer" onclick="openMetricModal('hours')"><div class="stat-label">Hours Saved (Auto)</div><div class="stat-val" id="an-hours">38h</div><div class="stat-trend up">&#8593; +12h vs last month</div></div>
+        <div class="stat violet" style="cursor:pointer" onclick="openMetricModal('workflows')"><div class="stat-label">Workflows Completed</div><div class="stat-val" id="an-workflows">21</div><div class="stat-trend up">&#8593; 5 this week</div></div>
+        <div class="stat orange" style="cursor:pointer" onclick="showInfoModal('🛡','Compliance Score','<p style=&quot;color:var(--subtle);line-height:1.7&quot;>Current compliance score: <strong style=&quot;color:var(--heading)&quot;>87%</strong>. Up 4% since alerts were processed. Jordan Reyes certification (-10%) and Tony Marsh license (-3%) are the active risk factors. Resolve these to reach 100%.</p>')"><div class="stat-label">Compliance Score</div><div class="stat-val">87%</div><div class="stat-trend warn">&#8593; +4% after alerts</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-panel"><div class="chart-title">Revenue by Week ($k)</div><div class="bar-chart" id="bar-revenue"></div></div>
+        <div class="chart-panel">
+          <div class="chart-title">Tasks by Status</div>
+          <div class="donut-wrap" id="task-donut-wrap">
+            <!-- filled by renderTaskDonut() -->
+          </div>
+        </div>
+        <div class="chart-panel"><div class="chart-title">Hours Saved by Automation (monthly)</div><div class="bar-chart" id="bar-hours"></div></div>
+        <div class="chart-panel"><div class="chart-title">Upload Volume by Category</div><div class="bar-chart" id="bar-uploads"></div></div>
+        <div class="chart-panel"><div class="chart-title">Job Volume by Week</div><div class="bar-chart" id="bar-loads"></div></div>
+        <div class="chart-panel"><div class="chart-title">Compliance Trend (% compliant)</div><div class="bar-chart" id="bar-compliance"></div></div>
+      </div>
+    </div>
+
+    <!-- Tasks Tab -->
+    <div id="analytics-tasks" style="display:none">
+      <div class="roi-grid">
+        <div class="stat amber"><div class="stat-label">Total Tasks</div><div class="stat-val" id="an-total-tasks">0</div><div class="stat-sub">All time</div></div>
+        <div class="stat green"><div class="stat-label">Completed</div><div class="stat-val" id="an-done-tasks">0</div><div class="stat-sub">Closed out</div></div>
+        <div class="stat blue"><div class="stat-label">Open</div><div class="stat-val" id="an-open-tasks">0</div><div class="stat-sub">Active</div></div>
+        <div class="stat red"><div class="stat-label">High Priority</div><div class="stat-val" id="an-high-tasks">0</div><div class="stat-sub">Need attention</div></div>
+        <div class="stat violet"><div class="stat-label">Automated</div><div class="stat-val" id="an-auto-tasks">0</div><div class="stat-sub">System-created</div></div>
+        <div class="stat orange"><div class="stat-label">Completion Rate</div><div class="stat-val" id="an-complete-rate">0%</div><div class="stat-sub">Done / Total</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-panel"><div class="chart-title">Tasks by Priority</div><div class="bar-chart" id="bar-task-priority"></div></div>
+        <div class="chart-panel"><div class="chart-title">Tasks by Category / Tag</div><div class="bar-chart" id="bar-task-tags"></div></div>
+        <div class="chart-panel wide">
+          <div class="chart-title">Task Completion Over Time</div>
+          <div class="bar-chart" id="bar-task-timeline"></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Task Breakdown by Assignee</span></div>
+        <div class="panel-body" style="padding:0">
+          <table class="data-table" id="task-assignee-table"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compliance Tab -->
+    <div id="analytics-compliance" style="display:none">
+      <div class="roi-grid">
+        <div class="stat orange"><div class="stat-label">Compliance Score</div><div class="stat-val">87%</div><div class="stat-trend up">&#8593; +25% from baseline</div></div>
+        <div class="stat red"><div class="stat-label">Open Alerts</div><div class="stat-val" id="an-comp-alerts">3</div><div class="stat-sub">Require action</div></div>
+        <div class="stat green"><div class="stat-label">Resolved This Month</div><div class="stat-val">8</div><div class="stat-sub">Closed issues</div></div>
+        <div class="stat amber"><div class="stat-label">Expiring (30d)</div><div class="stat-val">2</div><div class="stat-sub">Licenses / Certifications</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-panel wide"><div class="chart-title">Compliance Score Trend (Jan-May)</div><div class="bar-chart" id="bar-compliance2"></div></div>
+        <div class="chart-panel"><div class="chart-title">Issues by Category</div><div class="bar-chart" id="bar-comp-cats"></div></div>
+        <div class="chart-panel"><div class="chart-title">Resolution Time (avg days)</div><div class="bar-chart" id="bar-resolution"></div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Compliance Items — Current Status</span></div>
+        <div class="panel-body" style="padding:0">
+          <table class="data-table">
+            <thead><tr><th>Item</th><th>Contact / Entity</th><th>Status</th><th>Expires</th><th>Days Left</th></tr></thead>
+            <tbody>
+              <tr><td>Certification</td><td>Jordan Reyes</td><td><span class="tag red">Expired</span></td><td>Dec 2024</td><td style="color:var(--red);font-weight:700">-148</td></tr>
+              <tr><td>License Renewal</td><td>Tony Marsh</td><td><span class="tag amber">Expiring Soon</span></td><td>Jun 7, 2026</td><td style="color:var(--amber);font-weight:700">22</td></tr>
+              <tr><td>Certification</td><td>Marcus Webb</td><td><span class="tag green">Valid</span></td><td>Nov 2026</td><td style="color:var(--green)">184</td></tr>
+              <tr><td>Certification</td><td>Darnell King</td><td><span class="tag green">Valid</span></td><td>Mar 2027</td><td style="color:var(--green)">320</td></tr>
+              <tr><td>Q2 Regulatory Filing</td><td>NFINITY HQ</td><td><span class="tag blue">Upcoming</span></td><td>Jul 31, 2026</td><td style="color:var(--blue)">76</td></tr>
+              <tr><td>Insurance Policy</td><td>NFINITY HQ</td><td><span class="tag green">Active</span></td><td>Jan 2027</td><td style="color:var(--green)">260</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Uploads Tab -->
+    <div id="analytics-uploads" style="display:none">
+      <div class="roi-grid">
+        <div class="stat blue"><div class="stat-label">Total Documents</div><div class="stat-val" id="an-total-docs">0</div><div class="stat-sub">All categories</div></div>
+        <div class="stat green"><div class="stat-label">Processed</div><div class="stat-val" id="an-processed-docs">0</div><div class="stat-sub">Successfully reviewed</div></div>
+        <div class="stat red"><div class="stat-label">Flagged</div><div class="stat-val" id="an-flagged-docs">0</div><div class="stat-sub">Require review</div></div>
+        <div class="stat amber"><div class="stat-label">This Month</div><div class="stat-val" id="an-recent-docs">0</div><div class="stat-sub">New uploads</div></div>
+      </div>
+      <div class="analytics-grid">
+        <div class="chart-panel"><div class="chart-title">Uploads by Category</div><div class="bar-chart" id="bar-uploads2"></div></div>
+        <div class="chart-panel"><div class="chart-title">Uploads by File Type</div><div class="bar-chart" id="bar-file-types"></div></div>
+        <div class="chart-panel wide"><div class="chart-title">Upload Volume by Week</div><div class="bar-chart" id="bar-upload-timeline"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ NOTIFICATIONS ════════════════════ -->
+  <section class="page" id="page-notifications">
+    <div class="ph">
+      <h2>Notification Center</h2>
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button class="btn-outline btn-sm" onclick="markAllRead()">&#10003; Mark all read</button>
+        <button class="btn-outline btn-sm" onclick="clearAllNotifs()">Clear all</button>
+      </div>
+    </div>
+    <!-- Summary cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.75rem;margin-bottom:1.25rem" id="notif-summary-cards">
+      <div class="stat red" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('compliance',document.querySelector('.fpill[data-cat=compliance]'))">
+        <div class="stat-label">Compliance</div><div class="stat-val" id="nsc-compliance">0</div>
+      </div>
+      <div class="stat amber" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('finance',document.querySelector('[data-cat=finance]'))">
+        <div class="stat-label">Finance</div><div class="stat-val" id="nsc-finance">0</div>
+      </div>
+      <div class="stat blue" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('upload',document.querySelector('.fpill[onclick*=upload]'))">
+        <div class="stat-label">Uploads</div><div class="stat-val" id="nsc-upload">0</div>
+      </div>
+      <div class="stat slate" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('system',document.querySelector('.fpill[onclick*=system]'))">
+        <div class="stat-label">System</div><div class="stat-val" id="nsc-system">0</div>
+      </div>
+      <div class="stat green" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('all',document.querySelector('.fpill[onclick*=all]'))">
+        <div class="stat-label">Total Active</div><div class="stat-val" id="nsc-total">0</div>
+      </div>
+      <div class="stat violet" style="padding:.875rem;cursor:pointer" onclick="setNotifFilter('unread',document.getElementById('nf-unread'))">
+        <div class="stat-label">Unread</div><div class="stat-val" id="nsc-unread">0</div>
+      </div>
+    </div>
+    <div class="filters" id="notif-filter-pills">
+      <button class="fpill active" onclick="setNotifFilter('all',this)">All</button>
+      <button class="fpill" id="nf-unread" onclick="setNotifFilter('unread',this)">Unread <span id="unread-count" style="background:var(--red);color:#fff;border-radius:8px;padding:0 5px;font-size:.7rem;margin-left:.25rem">3</span></button>
+      <button class="fpill" data-cat="compliance" onclick="setNotifFilter('compliance',this)"><span class="alert-dot red-dot" style="margin-right:.3rem"></span>Compliance</button>
+      <button class="fpill" data-cat="finance" onclick="setNotifFilter('finance',this)"><span class="alert-dot amber-dot" style="margin-right:.3rem"></span>Finance</button>
+      <button class="fpill" onclick="setNotifFilter('system',this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:.3rem;vertical-align:middle"><circle cx="5" cy="5" r="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M5 1v1.2M5 7.8V9M9 5H7.8M2.2 5H1" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>System</button>
+      <button class="fpill" onclick="setNotifFilter('upload',this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:.3rem;vertical-align:middle"><path d="M1 3a.8.8 0 01.8-.8h2l1.2 1.6H8.2A.8.8 0 019 4.6v3.6A.8.8 0 018.2 9H1.8A.8.8 0 011 8.2V3z" stroke="currentColor" stroke-width="1.1"/></svg>Uploads</button>
+    </div>
+    <div id="notif-list"></div>
+  </section>
+
+  <!-- Notification Detail Modal -->
+  <div class="modal-bd" id="notif-detail-modal">
+    <div class="modal" style="max-width:520px">
+      <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem">
+        <span style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;flex-shrink:0" id="ndm-icon"></span>
+        <div style="flex:1">
+          <div id="ndm-title" style="font-size:1rem;font-weight:700;color:var(--heading)"></div>
+          <div id="ndm-meta" style="font-size:.75rem;color:var(--dim);margin-top:.2rem"></div>
+        </div>
+        <span id="ndm-badge"></span>
+      </div>
+      <div id="ndm-desc" style="font-size:.875rem;color:var(--subtle);line-height:1.7;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:.75rem"></div>
+      <div id="ndm-steps" style="margin-bottom:1rem"></div>
+      <div id="ndm-actions" style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.25rem"></div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeNotifDetail()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════ AUTOMATION SIMULATOR ════════════════════ -->
+  <section class="page" id="page-simulator">
+    <div class="ph"><h2>Automation Engine</h2><button class="btn-outline" onclick="resetSimMetrics()">Reset Metrics</button></div>
+    <div style="font-size:.875rem;color:var(--subtle);margin-bottom:1.5rem;max-width:600px">
+      Simulate real-world events that trigger the NFINITY HQ automation engine. Each scenario fires alerts, creates tasks, updates the dashboard, and logs to the activity feed — exactly as it would in production.
+    </div>
+    <div class="panel" style="margin-bottom:1.25rem">
+      <div class="panel-hd"><span class="panel-title">Active Workflows</span><span style="font-size:.75rem;color:var(--dim)">Running in background</span></div>
+      <div class="panel-body" style="padding:0">
+        <table class="data-table">
+          <thead><tr><th>Workflow</th><th>Trigger</th><th>Last Run</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--heading)">Invoice Watcher</strong></td>
+              <td style="color:var(--dim)">Invoice unpaid &gt;7d</td>
+              <td style="color:var(--subtle)">2m ago</td>
+              <td><button class="toggle on" style="pointer-events:none"></button></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Compliance Monitor</strong></td>
+              <td style="color:var(--dim)">Cert expiry &lt;30d</td>
+              <td style="color:var(--subtle)">14m ago</td>
+              <td><button class="toggle on" style="pointer-events:none"></button></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Task Generator</strong></td>
+              <td style="color:var(--dim)">Alert created</td>
+              <td style="color:var(--subtle)">1h ago</td>
+              <td><button class="toggle on" style="pointer-events:none"></button></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Lead Follow-Up Agent</strong></td>
+              <td style="color:var(--dim)">New prospect added</td>
+              <td style="color:var(--subtle)">3h ago</td>
+              <td><button class="toggle on" style="pointer-events:none"></button></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Document Classifier</strong></td>
+              <td style="color:var(--dim)">File uploaded</td>
+              <td style="color:var(--subtle)">Yesterday</td>
+              <td><button class="toggle off" style="pointer-events:none"></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="sim-grid" id="sim-grid"></div>
+    <div class="panel" style="margin-top:1.25rem">
+      <div class="panel-hd"><span class="panel-title">Live Metrics Impact</span><span style="font-size:.75rem;color:var(--dim)" id="sim-run-count">0 scenarios fired this session</span></div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:.75rem" id="sim-metrics-preview">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center">
+            <div style="font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--amber)" id="sp-tasks">0</div>
+            <div style="font-size:.72rem;color:var(--dim);margin-top:.2rem">Tasks Created</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center">
+            <div style="font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--red)" id="sp-alerts">0</div>
+            <div style="font-size:.72rem;color:var(--dim);margin-top:.2rem">Alerts Raised</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center">
+            <div style="font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--blue)" id="sp-notifs">0</div>
+            <div style="font-size:.72rem;color:var(--dim);margin-top:.2rem">Notifications Sent</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:.75rem;text-align:center">
+            <div style="font-size:1.5rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--violet)" id="sp-workflows">0</div>
+            <div style="font-size:.72rem;color:var(--dim);margin-top:.2rem">Workflows Run</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:1.25rem">
+      <div class="panel-hd"><span class="panel-title">Automation Log</span><button class="panel-act" onclick="clearSimLog()">Clear log</button></div>
+      <div class="panel-body" style="padding:.75rem">
+        <div class="sim-log" id="sim-log"><div style="color:var(--dim);font-size:.78rem">No events fired yet. Trigger a scenario above.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ ROI DASHBOARD ════════════════════ -->
+  <section class="page" id="page-roi">
+    <div class="ph"><h2>ROI Dashboard</h2>
+      <div style="display:flex;gap:.5rem;align-items:center">
+        <span style="font-size:.78rem;color:var(--dim)" id="roi-live-label">Live — updates as automations fire</span>
+        <button class="btn-outline btn-sm" onclick="resetROI()">Reset</button>
+      </div>
+    </div>
+
+    <!-- Live ROI counters (update with simulator) -->
+    <div style="margin-bottom:1.5rem">
+      <div style="font-size:.75rem;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem"><span class="alert-dot amber-dot"></span>Live Impact Counters — Fire simulations to watch these update</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:.875rem">
+        <div class="roi-card" style="border:1px solid var(--amber);border-top:3px solid var(--amber);cursor:pointer" onclick="openROIModal('hours')">
+          <div class="roi-value" id="roi-hours-live">38</div>
+          <div class="roi-label">Hours Saved</div>
+          <div class="roi-desc">This month · auto-calculated</div>
+        </div>
+        <div class="roi-card" style="border:1px solid var(--green);border-top:3px solid var(--green);cursor:pointer" onclick="openROIModal('tasks')">
+          <div class="roi-value" style="color:var(--green)" id="roi-tasks-live">21</div>
+          <div class="roi-label">Tasks Automated</div>
+          <div class="roi-desc">System-created · zero manual entry</div>
+        </div>
+        <div class="roi-card" style="border:1px solid var(--blue);border-top:3px solid var(--blue);cursor:pointer" onclick="openROIModal('revenue')">
+          <div class="roi-value" style="color:var(--blue)" id="roi-revenue-live">$4.2k</div>
+          <div class="roi-label">Revenue Recovered</div>
+          <div class="roi-desc">Invoices surfaced &amp; followed up</div>
+        </div>
+        <div class="roi-card" style="border:1px solid var(--violet);border-top:3px solid var(--violet);cursor:pointer" onclick="openROIModal('issues')">
+          <div class="roi-value" style="color:var(--violet)" id="roi-issues-live">0</div>
+          <div class="roi-label">Issues Prevented</div>
+          <div class="roi-desc">Caught before they became problems</div>
+        </div>
+        <div class="roi-card" style="border:1px solid var(--red);border-top:3px solid var(--red);cursor:pointer" onclick="openROIModal('alerts')">
+          <div class="roi-value" style="color:var(--red)" id="roi-alerts-live">3</div>
+          <div class="roi-label">Alerts Fired</div>
+          <div class="roi-desc">Compliance &amp; finance issues caught</div>
+        </div>
+        <div class="roi-card" style="border:1px solid var(--orange);border-top:3px solid var(--orange);cursor:pointer" onclick="openROIModal('workflows')">
+          <div class="roi-value" style="color:var(--orange)" id="roi-workflows-live">21</div>
+          <div class="roi-label">Workflows Run</div>
+          <div class="roi-desc">Automated rule executions</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cost savings calculator -->
+    <div class="panel" style="margin-bottom:1.25rem">
+      <div class="panel-hd"><span class="panel-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:.4rem;opacity:.7"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>Cost Savings Calculator</span><span style="font-size:.75rem;color:var(--dim)">Based on 38h saved/month @ $35/hr avg</span></div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem">
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1rem;text-align:center">
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem">Monthly Labor Savings</div>
+            <div style="font-size:1.75rem;font-weight:800;font-family:'DM Mono',monospace;color:var(--green)" id="roi-monthly-savings">$1,330</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1rem;text-align:center">
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem">Annual Labor Savings</div>
+            <div style="font-size:1.75rem;font-weight:800;font-family:'DM Mono',monospace;color:var(--green)">$15,960</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1rem;text-align:center">
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem">Compliance Fine Avoided</div>
+            <div style="font-size:1.75rem;font-weight:800;font-family:'DM Mono',monospace;color:var(--amber)">$2,750</div>
+          </div>
+          <div style="background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:1rem;text-align:center">
+            <div style="font-size:.72rem;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.35rem">Total Monthly ROI</div>
+            <div style="font-size:1.75rem;font-weight:800;font-family:'DM Mono',monospace;color:var(--amber)" id="roi-total-monthly">$8,280</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;font-size:.78rem;color:var(--dim);text-align:center">Platform cost: ~$500/mo &middot; Every dollar spent returns ~16&times; in recovered time, prevented fines, and surfaced revenue</div>
+      </div>
+    </div>
+
+    <!-- Manual steps eliminated -->
+    <div class="panel" style="margin-bottom:1.25rem">
+      <div class="panel-hd"><span class="panel-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:.4rem;opacity:.7"><polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Manual Steps Eliminated</span></div>
+      <div class="panel-body" style="padding:0">
+        <table class="data-table">
+          <thead><tr><th>Manual Process</th><th>Old Method</th><th>Now</th><th>Time Saved</th><th>Error Risk</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--heading)">Certification Tracking</strong></td>
+              <td style="color:var(--dim)">Spreadsheet + calendar reminders</td>
+              <td><span class="tag green">Auto-monitored</span></td>
+              <td style="color:var(--green)">6h/mo</td>
+              <td><span class="tag red">High &#8594;</span> <span class="tag green">Zero</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Invoice Follow-Up</strong></td>
+              <td style="color:var(--dim)">Manual email checks daily</td>
+              <td><span class="tag green">Auto-flagged</span></td>
+              <td style="color:var(--green)">8h/mo</td>
+              <td><span class="tag amber">Med &#8594;</span> <span class="tag green">Low</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Document Filing</strong></td>
+              <td style="color:var(--dim)">Email attachments + local folders</td>
+              <td><span class="tag green">Centralized hub</span></td>
+              <td style="color:var(--green)">5h/mo</td>
+              <td><span class="tag red">High &#8594;</span> <span class="tag green">Zero</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Task Assignment</strong></td>
+              <td style="color:var(--dim)">Verbal + text messages</td>
+              <td><span class="tag green">Auto-created</span></td>
+              <td style="color:var(--green)">4h/mo</td>
+              <td><span class="tag red">High &#8594;</span> <span class="tag green">Zero</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Regulatory Filing Prep</strong></td>
+              <td style="color:var(--dim)">Manual tracking, last-minute scramble</td>
+              <td><span class="tag green">Deadline alerts</span></td>
+              <td style="color:var(--green)">7h/filing</td>
+              <td><span class="tag red">High &#8594;</span> <span class="tag amber">Low</span></td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--heading)">Client Status Updates</strong></td>
+              <td style="color:var(--dim)">Phone calls + email threads</td>
+              <td><span class="tag green">Live dashboard</span></td>
+              <td style="color:var(--green)">8h/mo</td>
+              <td><span class="tag amber">Med &#8594;</span> <span class="tag green">Zero</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Before/After + ROI charts -->
+    <div class="before-after" style="margin-bottom:1.25rem">
+      <div class="ba-panel before">
+        <div class="ba-title">Before NFINITY HQ</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>Manual spreadsheets for compliance tracking</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>Sticky notes &amp; verbal reminders</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>Scattered paperwork across email and folders</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>2–3 hrs/day chasing overdue tasks</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>Missed invoices and late penalties</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>No visibility into team compliance</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>No alerts for expiring documents</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot red-dot"></span></span>No single source of truth</div>
+      </div>
+      <div class="ba-panel after">
+        <div class="ba-title">After NFINITY HQ</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Unified dashboard — everything at a glance</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Auto-alerts 30–60 days before expiry</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Centralized docs with search &amp; tags</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Tasks auto-created on issue detection</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Invoice tracking with automated follow-ups</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Real-time compliance scores &amp; trends</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>Instant alerts to the right person</div>
+        <div class="ba-item"><span class="ba-icon"><span class="alert-dot green-dot"></span></span>One system · full visibility · zero guesswork</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-hd"><span class="panel-title"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:.4rem;opacity:.7"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>ROI Over Time</span></div>
+      <div class="panel-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem">
+          <div><div class="chart-title">Hours Saved (monthly cumulative)</div><div class="bar-chart" id="roi-hours-chart"></div></div>
+          <div><div class="chart-title">Workflow Completions / Month</div><div class="bar-chart" id="roi-workflows-chart"></div></div>
+          <div><div class="chart-title">Issues Prevented (running total)</div><div class="bar-chart" id="roi-issues-chart"></div></div>
+          <div><div class="chart-title">Manual Steps Reduced (%)</div><div class="bar-chart" id="roi-manual-chart"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ VIRTUAL EMPLOYEES ════════════════════ -->
+  <section class="page" id="page-virtual">
+    <div class="ph">
+      <h2>Virtual Employees</h2>
+    </div>
+    <div style="font-size:.875rem;color:var(--subtle);margin-bottom:1.5rem;max-width:600px">AI-powered agents that work in the background for your business — monitoring, alerting, and acting so you don't have to.</div>
+    <div class="sim-grid">
+      <div class="sim-card ai-card">
+        <div class="ai-head">
+          <div class="ai-id">
+            <div class="ai-avatar ruby" aria-hidden="true"></div>
+            <div>
+              <div class="sim-card-title">Ruby</div>
+              <div class="ai-working"><strong>Working on:</strong><span id="ai-ruby-work">Auditing invoices</span><span class="ai-dots"></span></div>
+            </div>
+          </div>
+          <span class="ai-status"><span class="alert-dot green-dot"></span>3 of 5 jobs</span>
+        </div>
+        <div class="sim-card-desc">Finance and proposal operator monitoring invoice age, broker reminders, and proposal packets.</div>
+        <div class="ai-progress">
+          <div class="ai-progress-row"><span>Task Queue</span><span id="ai-ruby-progress-text">78%</span></div>
+          <div class="ai-progress-track"><div class="ai-progress-fill" id="ai-ruby-progress" style="width:78%"></div></div>
+        </div>
+        <div class="ai-feed" id="ai-ruby-feed">
+          <div class="ai-feed-item">Completed proposal generation</div>
+          <div class="ai-feed-item">Reviewed invoice discrepancies</div>
+          <div class="ai-feed-item">Escalated compliance issue</div>
+        </div>
+        <div style="display:flex;gap:.5rem;position:relative;z-index:1">
+          <button class="btn-outline btn-sm" onclick="runScenario('invoice');toast('Ruby ran invoice audit')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Ruby configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card ai-card">
+        <div class="ai-head">
+          <div class="ai-id">
+            <div class="ai-avatar quinn" aria-hidden="true"></div>
+            <div>
+              <div class="sim-card-title">Quinn</div>
+              <div class="ai-working"><strong>Working on:</strong><span id="ai-quinn-work">Reviewing lead pipeline</span><span class="ai-dots"></span></div>
+            </div>
+          </div>
+          <span class="ai-status"><span class="alert-dot green-dot"></span>4 of 6 jobs</span>
+        </div>
+        <div class="sim-card-desc">Growth and support operator handling lead follow-up, support triage, and pipeline updates.</div>
+        <div class="ai-progress">
+          <div class="ai-progress-row"><span>Task Queue</span><span id="ai-quinn-progress-text">64%</span></div>
+          <div class="ai-progress-track"><div class="ai-progress-fill" id="ai-quinn-progress" style="width:64%"></div></div>
+        </div>
+        <div class="ai-feed" id="ai-quinn-feed">
+          <div class="ai-feed-item">Reviewed lead pipeline</div>
+          <div class="ai-feed-item">Generated follow-up sequence</div>
+          <div class="ai-feed-item">Responded to support request</div>
+        </div>
+        <div style="display:flex;gap:.5rem;position:relative;z-index:1">
+          <button class="btn-outline btn-sm" onclick="runScenario('opportunity');toast('Quinn generated follow-up sequence')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Quinn configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
+          <div class="sim-card-title">Invoice Agent</div>
+          <span style="display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--green);font-weight:600"><span class="alert-dot green-dot"></span>Active</span>
+        </div>
+        <div class="sim-card-desc">Monitors all unpaid invoices, sends automated reminders to brokers, and escalates to human review when invoice age exceeds threshold.</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.75rem">Trigger: Invoice unpaid &gt;7d · Last run: 14m ago</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-outline btn-sm" onclick="runScenario('invoice');toast('Invoice Agent ran manually')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Invoice Agent configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
+          <div class="sim-card-title">Compliance Agent</div>
+          <span style="display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--green);font-weight:600"><span class="alert-dot green-dot"></span>Active</span>
+        </div>
+        <div class="sim-card-desc">Tracks all certifications, licenses, and regulatory deadlines. Fires alerts at 30-day and 7-day windows. Auto-creates renewal tasks.</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.75rem">Trigger: Cert expiry &lt;30d · Last run: 2m ago</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-outline btn-sm" onclick="runScenario('cert');toast('Compliance Agent ran manually')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Compliance Agent configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
+          <div class="sim-card-title">Lead Follow-Up Agent</div>
+          <span style="display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--green);font-weight:600"><span class="alert-dot green-dot"></span>Active</span>
+        </div>
+        <div class="sim-card-desc">Follows up on new leads, logs touch activity to CRM, and escalates stale prospects after 72 hours of no response.</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.75rem">Trigger: New prospect added · Last run: 3h ago</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-outline btn-sm" onclick="runScenario('opportunity');toast('Lead Follow-Up Agent ran manually')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Lead Follow-Up Agent configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
+          <div class="sim-card-title">Document Classifier</div>
+          <span style="display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--amber);font-weight:600"><span class="alert-dot amber-dot"></span>Paused</span>
+        </div>
+        <div class="sim-card-desc">Auto-categorizes uploaded files into Compliance, Finance, Operations, Legal, or HR. Tags documents for searchability.</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.75rem">Trigger: File uploaded · Last run: Yesterday</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-outline btn-sm" onclick="toast('Document Classifier resumed — monitoring uploads')">Resume</button>
+          <button class="btn-outline btn-sm" onclick="toast('Document Classifier configuration opened')">Configure</button>
+        </div>
+      </div>
+      <div class="sim-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.25rem">
+          <div class="sim-card-title">Task Escalation Agent</div>
+          <span style="display:flex;align-items:center;gap:.375rem;font-size:.75rem;color:var(--green);font-weight:600"><span class="alert-dot green-dot"></span>Active</span>
+        </div>
+        <div class="sim-card-desc">Monitors task due dates across all modules. Automatically escalates overdue tasks to high priority and notifies the assigned team member.</div>
+        <div style="font-size:.72rem;color:var(--dim);margin-bottom:.75rem">Trigger: Due date exceeded · Last run: 32m ago</div>
+        <div style="display:flex;gap:.5rem">
+          <button class="btn-outline btn-sm" onclick="runScenario('task');toast('Task Escalation Agent ran manually')">Run Now</button>
+          <button class="btn-outline btn-sm" onclick="toast('Task Escalation Agent configuration opened')">Configure</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════════════ WALKTHROUGH ════════════════════ -->
+  <!-- ════════════════════ SETTINGS ════════════════════ -->
+  <section class="page" id="page-settings">
+    <div class="ph"><h2>Settings</h2></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem">
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Profile</span></div>
+        <div class="panel-body" style="display:flex;flex-direction:column;gap:.75rem">
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Display Name</div><input class="field-input" value="Demo User" style="font-size:.875rem"></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Email</div><input class="field-input" value="demo@nfinityhq.com" type="email" style="font-size:.875rem"></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Role</div><div style="font-size:.875rem;color:var(--subtle)">Admin</div></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Company</div><div style="font-size:.875rem;color:var(--subtle)">NFINITY HQ</div></div>
+          <button class="btn-outline btn-sm" onclick="toast('Profile saved')">Save Profile</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Workspace</span></div>
+        <div class="panel-body" style="display:flex;flex-direction:column;gap:.75rem">
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Company Name</div><input class="field-input" value="NFINITY HQ" style="font-size:.875rem"></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Timezone</div>
+            <select class="field-select" style="font-size:.875rem">
+              <option selected>America/Chicago (CT)</option>
+              <option>America/New_York (ET)</option>
+              <option>America/Denver (MT)</option>
+              <option>America/Los_Angeles (PT)</option>
+              <option>America/Phoenix (AZ)</option>
+            </select>
+          </div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Currency</div>
+            <select class="field-select" style="font-size:.875rem">
+              <option selected>USD ($)</option>
+              <option>CAD (C$)</option>
+              <option>EUR (€)</option>
+              <option>GBP (£)</option>
+            </select>
+          </div>
+          <button class="btn-outline btn-sm" onclick="toast('Workspace settings saved')">Save</button>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">AI &amp; Automation</span></div>
+        <div class="panel-body" style="padding-top:.5rem">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div data-setting="ai_tasks" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Auto-create tasks</div><div style="font-size:.75rem;color:var(--dim)">From compliance &amp; invoice alerts</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="ai_smart_notif" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Smart notifications</div><div style="font-size:.75rem;color:var(--dim)">Prioritize alerts by urgency</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="ai_doc_scan" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">AI document scanning</div><div style="font-size:.75rem;color:var(--dim)">Auto-classify uploaded files</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="ai_lead_score" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0"><div><div style="font-size:.85rem;color:var(--body)">Lead scoring</div><div style="font-size:.75rem;color:var(--dim)">AI-ranked prospect priorities</div></div><button class="toggle off" onclick="tog(this)"></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem">
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Notifications</span></div>
+        <div class="panel-body" style="padding-top:.5rem">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div data-setting="notif_compliance" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Compliance alerts</div><div style="font-size:.75rem;color:var(--dim)">Certifications, licenses, filings</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="notif_invoice" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Invoice reminders</div><div style="font-size:.75rem;color:var(--dim)">Overdue payment alerts</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="notif_tasks" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0"><div><div style="font-size:.85rem;color:var(--body)">Task reminders</div><div style="font-size:.75rem;color:var(--dim)">Due date alerts</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Automation Rules</span></div>
+        <div class="panel-body" style="padding-top:.5rem">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div data-setting="auto_tasks" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Auto-create tasks</div><div style="font-size:.75rem;color:var(--dim)">On compliance expiry</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="auto_risk" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><div><div style="font-size:.85rem;color:var(--body)">Risk notifications</div><div style="font-size:.75rem;color:var(--dim)">High-priority flags</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="auto_invoice" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0"><div><div style="font-size:.85rem;color:var(--body)">Invoice follow-ups</div><div style="font-size:.75rem;color:var(--dim)">Auto-flag overdue</div></div><button class="toggle on" onclick="tog(this)"></button></div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Account</span></div>
+        <div class="panel-body" style="display:flex;flex-direction:column;gap:.75rem">
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Display Name</div><div style="font-size:.9rem;font-weight:600;color:var(--heading)" id="set-name">Demo User</div></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Email</div><div style="font-size:.875rem;color:var(--subtle)" id="set-email">demo@nfinityhq.com</div></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Workspace</div><div style="font-size:.875rem;color:var(--subtle)" id="set-company">NFINITY HQ</div></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Role</div><div style="font-size:.875rem;color:var(--subtle)" id="set-role">Admin</div></div>
+          <div><div style="font-size:.78rem;color:var(--dim);margin-bottom:.25rem">Plan</div><div style="font-size:.875rem;color:var(--amber);font-family:'DM Mono',monospace">Professional</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-hd"><span class="panel-title">Modules</span></div>
+        <div class="panel-body" style="padding-top:.5rem">
+          <div style="display:flex;flex-direction:column;gap:.5rem">
+            <div data-setting="mod_crm" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><span style="font-size:.85rem;color:var(--body)">CRM</span><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="mod_outreach" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><span style="font-size:.85rem;color:var(--body)">Outreach</span><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="mod_pipeline" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)"><span style="font-size:.85rem;color:var(--body)">Pipeline</span><button class="toggle on" onclick="tog(this)"></button></div>
+            <div data-setting="mod_automation" style="display:flex;justify-content:space-between;align-items:center;padding:.5rem 0"><span style="font-size:.85rem;color:var(--body)">Automation Engine</span><button class="toggle on" onclick="tog(this)"></button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /app -->
+
+<!-- ═══ MODAL ═══ -->
+<div class="modal-bd" id="modal">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">New Item</div>
+    <div id="modal-body"></div>
+    <div class="modal-actions">
+      <button class="btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<style>
+.toggle{width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--amber)}.toggle.off{background:var(--muted)}
+.toggle::after{content:'';position:absolute;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on::after{left:18px}.toggle.off::after{left:2px}
+
+/* ── TASK DETAIL DRAWER ──────────────────────── */
+.task-detail-drawer{position:fixed;top:0;right:-440px;width:420px;height:100vh;background:var(--surface);border-left:1px solid var(--border);z-index:400;display:flex;flex-direction:column;transition:right .3s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 24px rgba(0,0,0,.4)}
+.task-detail-drawer.open{right:0}
+.tdd-header{display:flex;align-items:center;justify-content:space-between;padding:1.125rem 1.25rem;border-bottom:1px solid var(--border);flex-shrink:0}
+.tdd-title{font-size:1rem;font-weight:700;color:var(--heading)}
+.tdd-close{background:none;border:none;color:var(--subtle);font-size:1.25rem;cursor:pointer;padding:.25rem;border-radius:4px}
+.tdd-close:hover{color:var(--heading);background:var(--card)}
+.tdd-body{flex:1;overflow-y:auto;padding:1.25rem}
+.tdd-section{margin-bottom:1.25rem}
+.tdd-label{font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.tdd-val{font-size:.9rem;color:var(--heading)}
+.tdd-input{width:100%;padding:.6rem .875rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--heading);font-size:.875rem;margin-bottom:.5rem}
+.tdd-input:focus{outline:none;border-color:var(--amber)}
+.tdd-textarea{width:100%;padding:.6rem .875rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--heading);font-size:.875rem;resize:vertical;min-height:80px}
+.tdd-textarea:focus{outline:none;border-color:var(--amber)}
+.tdd-select{width:100%;padding:.6rem .875rem;background:var(--card);border:1px solid var(--border);border-radius:6px;color:var(--heading);font-size:.875rem}
+.tdd-footer{padding:1rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:.625rem;flex-shrink:0}
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:399;display:none}
+.drawer-overlay.visible{display:block}
+
+/* ── MOBILE FIXES (placed after base rules so they win source-order) ── */
+@media(max-width:640px){
+  /* Task detail drawer: full-width on phones (base rule above is 420px) */
+  .task-detail-drawer{width:100vw;right:-100vw}
+  .task-detail-drawer.open{right:0}
+  /* Task list rows: stack so the title isn't crushed by the status tags */
+  .task-item{flex-wrap:wrap;align-items:flex-start}
+  .task-info{flex:1 1 100%;order:-1;margin-bottom:.25rem}
+  .task-title{white-space:normal}
+  .task-item .btn-danger{margin-left:auto}
+}
+
+/* ── CALENDAR VIEW ───────────────────────────── */
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;background:var(--border);border-radius:8px;overflow:hidden}
+.cal-day-header{background:var(--surface);padding:.5rem;text-align:center;font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.07em}
+.cal-day{background:var(--card);min-height:90px;padding:.4rem .5rem;position:relative;cursor:pointer;transition:background .15s}
+.cal-day:hover{background:var(--card2)}
+.cal-day.today{background:rgba(251,191,36,.08);outline:1.5px solid var(--amber);outline-offset:-1.5px}
+.cal-day.other-month .cal-day-num{color:var(--muted)}
+.cal-day-num{font-size:.78rem;font-weight:600;color:var(--subtle);margin-bottom:.25rem}
+.cal-day.today .cal-day-num{color:var(--amber);font-weight:800}
+.cal-task-dot{font-size:.68rem;color:var(--heading);background:var(--surface);border-radius:3px;padding:.1rem .3rem;margin-bottom:.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid var(--amber);cursor:pointer;line-height:1.3}
+.cal-task-dot.high{border-left-color:var(--red)}
+.cal-task-dot.medium{border-left-color:var(--amber)}
+.cal-task-dot.low{border-left-color:var(--green)}
+.cal-task-dot.done{opacity:.45;text-decoration:line-through}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+.cal-nav-btn{background:none;border:1px solid var(--border);border-radius:6px;color:var(--subtle);cursor:pointer;padding:.35rem .75rem;font-size:.875rem;transition:all .15s}
+.cal-nav-btn:hover{border-color:var(--amber);color:var(--amber)}
+.cal-month-label{font-size:1rem;font-weight:700;color:var(--heading)}
+.cal-more{font-size:.65rem;color:var(--amber);cursor:pointer;margin-top:.15rem}
+
+/* ── ENHANCED PIPELINE ───────────────────────── */
+.pip-col-total{font-size:.72rem;color:var(--green);font-family:'DM Mono',monospace;font-weight:700;margin-top:.15rem}
+.pip-card-actions{display:flex;gap:.375rem;margin-top:.5rem}
+.pip-add-btn{width:100%;padding:.45rem;border:1px dashed var(--border);background:none;border-radius:5px;color:var(--dim);font-size:.75rem;cursor:pointer;transition:all .15s;margin-top:.5rem}
+.pip-add-btn:hover{border-color:var(--amber);color:var(--amber)}
+.pip-total-bar{display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap;padding:.75rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:8px}
+.pip-total-item{display:flex;flex-direction:column;gap:.1rem}
+.pip-total-label{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.pip-total-val{font-size:.95rem;font-weight:700;color:var(--green);font-family:'DM Mono',monospace}
+
+/* ── ENHANCED CRM ────────────────────────────── */
+.crm-tab-proposals{display:none}
+.proposal-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:.75rem;transition:border-color .15s}
+.proposal-card:hover{border-color:var(--amber)}
+.proposal-stage-bar{display:flex;gap:2px;margin:1rem 0;border-radius:4px;overflow:hidden;height:6px}
+.proposal-stage-seg{height:100%;flex:1;background:var(--border);transition:background .3s}
+.proposal-stage-seg.active{background:var(--amber)}
+.proposal-stage-seg.done{background:var(--green)}
+.contact-detail-row{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,.3)}
+.contact-detail-row:last-child{border-bottom:none}
+
+/* ── ENHANCED OUTREACH ───────────────────────── */
+.prospect-history{margin-top:.75rem;border-top:1px solid rgba(51,65,85,.4);padding-top:.625rem}
+.prospect-history-title{font-size:.7rem;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.prospect-history-item{display:flex;gap:.5rem;align-items:flex-start;padding:.3rem 0;font-size:.78rem;color:var(--subtle)}
+.prospect-hist-icon{flex-shrink:0;font-size:.9rem}
+.ph-note-input{width:100%;padding:.45rem .75rem;background:var(--surface);border:1px solid var(--border);border-radius:5px;color:var(--heading);font-size:.8rem;margin-top:.5rem}
+.ph-note-input:focus{outline:none;border-color:var(--amber)}
+.outreach-stats-bar{display:flex;gap:.75rem;margin-bottom:1.25rem;flex-wrap:wrap}
+.outreach-stat{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:.625rem .875rem;text-align:center;flex:1;min-width:90px}
+.outreach-stat-val{font-size:1.25rem;font-weight:700;font-family:'DM Mono',monospace;color:var(--heading)}
+.outreach-stat-label{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+
+/* ── ENHANCED UPLOADS ────────────────────────── */
+.upload-cat-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-left:.25rem}
+.cat-compliance{background:rgba(239,68,68,.15);color:#fca5a5}
+.cat-finance{background:rgba(16,185,129,.15);color:#6ee7b7}
+.cat-operations{background:rgba(59,130,246,.15);color:#93c5fd}
+.cat-legal{background:rgba(139,92,246,.15);color:#c4b5fd}
+.cat-hr{background:rgba(249,115,22,.15);color:#fdba74}
+.file-preview-area{background:var(--surface);border:1px dashed var(--border);border-radius:8px;height:200px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.75rem;color:var(--dim);margin-bottom:1rem;position:relative;overflow:hidden}
+.file-preview-icon{font-size:3.5rem;line-height:1}
+.file-preview-name{font-size:.8rem;font-family:'DM Mono',monospace;color:var(--subtle);text-align:center;padding:0 1rem}
+.file-meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:1rem}
+.file-meta-item{background:var(--card);border:1px solid var(--border);border-radius:5px;padding:.5rem .75rem}
+.file-meta-key{font-size:.65rem;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.file-meta-val{font-size:.85rem;color:var(--heading);font-weight:600;margin-top:.15rem}
+.upload-progress{height:3px;background:var(--border);border-radius:2px;margin-top:.35rem;overflow:hidden}
+.upload-progress-bar{height:100%;background:var(--amber);border-radius:2px;transition:width .4s}
+.file-card-enhanced{display:flex;align-items:flex-start;gap:.875rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.875rem 1rem;margin-bottom:.625rem;transition:border-color .15s,box-shadow .15s;cursor:pointer}
+.file-card-enhanced:hover{border-color:var(--amber);box-shadow:0 2px 8px rgba(251,191,36,.08)}
+.file-card-enhanced.flagged-card{border-left:3px solid var(--red)}
+.file-type-badge{width:40px;height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;flex-shrink:0}
+.file-type-badge.pdf-badge{background:rgba(239,68,68,.12)}
+.file-type-badge.img-badge{background:rgba(59,130,246,.12)}
+.file-type-badge.sheet-badge{background:rgba(16,185,129,.12)}
+.file-type-badge.doc-badge{background:rgba(139,92,246,.12)}
+</style>
+
+<div id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+<!-- ═════════════════════════════════════════════════════════
+     JAVASCRIPT — ALL MODULES
+════════════════════════════════════════════════════════════ -->
+<script src="demo.js"></script>
+
+<!-- Scenario Services -->
+<script src="../../core/scenarios/opportunityService.js"></script>
+<script src="../../core/scenarios/complianceService.js"></script>
+<script src="../../core/scenarios/invoiceService.js"></script>
+<script src="../../core/scenarios/taskEscalationService.js"></script>
+<script src="../../core/scenarios/documentService.js"></script>
+<script src="../../core/automation/AutomationSimulator.js"></script>
+
+</body>
+</html>

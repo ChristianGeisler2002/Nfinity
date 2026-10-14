@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/public/ux.css">
+  <script defer src="/public/ux.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="NfinityHQ — Start building your custom business system."/>
+  <title>Start Building — NFINITY HQ</title>
+  <!-- ─── Security headers (mirror at the edge/CDN as real HTTP headers) ─── -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <base href="/public/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── CONTACT PAGE LAYOUT ─────────────────────── */
+    .contact-page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-page-logo {
+      margin-bottom: 2.5rem;
+    }
+
+    .contact-card {
+      background: rgba(10, 15, 40, 0.82);
+      border: 1px solid rgba(99, 133, 255, 0.18);
+      border-radius: 18px;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 580px;
+      box-shadow: 0 0 60px rgba(80, 100, 255, 0.07), 0 2px 40px rgba(0,0,0,0.45);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(99,133,255,0.7), rgba(140,90,255,0.5), transparent);
+    }
+
+    .contact-card-glow {
+      position: absolute;
+      top: -80px; left: 50%;
+      transform: translateX(-50%);
+      width: 300px; height: 200px;
+      background: radial-gradient(ellipse, rgba(80,100,255,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .contact-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: #f0f4ff;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.01em;
+    }
+
+    .contact-header p {
+      font-size: 0.9rem;
+      color: rgba(180, 195, 255, 0.6);
+      line-height: 1.5;
+    }
+
+    /* ── FORM GRID ───────────────────────────────── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .contact-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .contact-field.full {
+      grid-column: 1 / -1;
+    }
+
+    .contact-field label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(180, 195, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+
+    .contact-input,
+    .contact-select {
+      width: 100%;
+      padding: 0.7rem 0.9rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(99, 133, 255, 0.18);
+      border-radius: 8px;
+      color: #f0f4ff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .contact-input::placeholder {
+      color: rgba(180, 195, 255, 0.25);
+    }
+
+    .contact-input:focus,
+    .contact-select:focus {
+      border-color: rgba(99, 133, 255, 0.5);
+      box-shadow: 0 0 0 3px rgba(80, 100, 255, 0.1);
+    }
+
+    .contact-field.has-error .contact-input,
+    .contact-field.has-error .contact-select {
+      border-color: rgba(255, 80, 80, 0.55);
+    }
+
+    .field-error {
+      font-size: 0.72rem;
+      color: #ff8080;
+      min-height: 1rem;
+    }
+
+    /* Select wrapper with arrow */
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid rgba(180, 195, 255, 0.4);
+      pointer-events: none;
+    }
+
+    .contact-select option {
+      background: #0a0f28;
+      color: #f0f4ff;
+    }
+
+    /* ── PREF TOGGLE (Call / Text) ───────────────── */
+    .pref-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: rgba(180, 195, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 0.4rem;
+    }
+
+    .pref-toggle {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .pref-toggle input[type="radio"] {
+      display: none;
+    }
+
+    .pref-toggle label {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.65rem 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(99, 133, 255, 0.18);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: rgba(180, 195, 255, 0.5);
+      transition: all 0.2s;
+      text-transform: none;
+      letter-spacing: 0;
+      font-weight: 500;
+    }
+
+    .pref-toggle label svg {
+      flex-shrink: 0;
+      opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+
+    .pref-toggle input[type="radio"]:checked + label {
+      background: rgba(80, 100, 255, 0.14);
+      border-color: rgba(99, 133, 255, 0.55);
+      color: rgba(200, 215, 255, 0.95);
+    }
+
+    .pref-toggle input[type="radio"]:checked + label svg {
+      opacity: 1;
+    }
+
+    /* ── SUBMIT ──────────────────────────────────── */
+    .contact-submit {
+      width: 100%;
+      padding: 0.85rem 1.5rem;
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #4f6aff, #7b4fff);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      letter-spacing: 0.01em;
+    }
+
+    .contact-submit:hover:not(:disabled) {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    .contact-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .submit-spinner {
+      display: none;
+      width: 18px; height: 18px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    /* ── SUCCESS STATE ───────────────────────────── */
+    .success-state {
+      display: none;
+      text-align: center;
+      animation: success-pop 0.4s ease;
+    }
+
+    @keyframes success-pop {
+      0% { opacity: 0; transform: scale(0.92); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(80,200,120,0.18), rgba(80,200,120,0.08));
+      border: 1px solid rgba(80,200,120,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+
+    .success-icon svg {
+      color: #5ec87a;
+    }
+
+    .success-state h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #f0f4ff;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-state p {
+      font-size: 0.88rem;
+      color: rgba(180, 195, 255, 0.6);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .success-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      background: rgba(80,200,120,0.06);
+      border: 1px solid rgba(80,200,120,0.18);
+      border-radius: 10px;
+      padding: 1.1rem 1.25rem;
+      text-align: left;
+    }
+
+    .success-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: rgba(180, 195, 255, 0.75);
+    }
+
+    .success-row svg {
+      flex-shrink: 0;
+      color: #5ec87a;
+    }
+
+    .pulse-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #5ec87a;
+      box-shadow: 0 0 0 0 rgba(94,200,122,0.4);
+      animation: pulse-dot 1.5s ease-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0% { box-shadow: 0 0 0 0 rgba(94,200,122,0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(94,200,122,0); }
+      100% { box-shadow: 0 0 0 0 rgba(94,200,122,0); }
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────── */
+    @media (max-width: 540px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+      }
+      .contact-card {
+        padding: 1.75rem 1.25rem;
+        border-radius: 14px;
+      }
+      .contact-header h1 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="galaxy"></canvas>
+  <div class="orb" id="orb-1"></div>
+  <div class="orb" id="orb-2"></div>
+  <div class="orb" id="orb-3"></div>
+  <div class="orb" id="orb-4"></div>
+
+  <div class="contact-page-wrap">
+
+    <div class="contact-page-logo">
+      <a href="index.html" style="text-decoration:none">
+        <div class="logo">
+          <span class="logo-n">N</span><span class="logo-rest">finityHQ</span>
+          <div class="logo-dot"></div>
+        </div>
+      </a>
+    </div>
+
+    <div class="contact-card">
+      <div class="contact-card-glow"></div>
+
+      <!-- FORM STATE -->
+      <div id="form-state">
+        <div class="contact-header">
+          <h1>Start Building</h1>
+          <p>Tell us about your business and we'll reach out to schedule a discovery call.</p>
+        </div>
+
+        <form id="contact-form" novalidate>
+
+          <!-- Honeypot (hidden, catches bots) -->
+          <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off"/>
+
+          <div class="contact-grid">
+
+            <div class="contact-field" id="cf-name">
+              <label for="c-name">Full Name</label>
+              <input class="contact-input" type="text" id="c-name" name="name" placeholder="Jane Smith" autocomplete="name"/>
+              <span class="field-error" id="ce-name"></span>
+            </div>
+
+            <div class="contact-field" id="cf-company">
+              <label for="c-company">Company</label>
+              <input class="contact-input" type="text" id="c-company" name="company" placeholder="Acme Logistics"/>
+              <span class="field-error" id="ce-company"></span>
+            </div>
+
+            <div class="contact-field" id="cf-email">
+              <label for="c-email">Email Address</label>
+              <input class="contact-input" type="email" id="c-email" name="email" placeholder="you@example.test" autocomplete="email"/>
+              <span class="field-error" id="ce-email"></span>
+            </div>
+
+            <div class="contact-field" id="cf-phone">
+              <label for="c-phone">Phone Number</label>
+              <input class="contact-input" type="tel" id="c-phone" name="phone" placeholder="(555) 000-0000" autocomplete="tel"/>
+              <span class="field-error" id="ce-phone"></span>
+            </div>
+
+            <div class="contact-field" id="cf-state">
+              <label for="c-state">State / Province</label>
+              <div class="select-wrap">
+                <select class="contact-select" id="c-state" name="state">
+                  <option value="">Select your state…</option>
+                  <optgroup label="United States">
+                    <option>Alabama</option><option>Alaska</option><option>Arizona</option>
+                    <option>Arkansas</option><option>California</option><option>Colorado</option>
+                    <option>Connecticut</option><option>Delaware</option><option>Florida</option>
+                    <option>Georgia</option><option>Hawaii</option><option>Idaho</option>
+                    <option>Illinois</option><option>Indiana</option><option>Iowa</option>
+                    <option>Kansas</option><option>Kentucky</option><option>Louisiana</option>
+                    <option>Maine</option><option>Maryland</option><option>Massachusetts</option>
+                    <option>Michigan</option><option>Minnesota</option><option>Mississippi</option>
+                    <option>Missouri</option><option>Montana</option><option>Nebraska</option>
+                    <option>Nevada</option><option>New Hampshire</option><option>New Jersey</option>
+                    <option>New Mexico</option><option>New York</option><option>North Carolina</option>
+                    <option>North Dakota</option><option>Ohio</option><option>Oklahoma</option>
+                    <option>Oregon</option><option>Pennsylvania</option><option>Rhode Island</option>
+                    <option>South Carolina</option><option>South Dakota</option><option>Tennessee</option>
+                    <option>Texas</option><option>Utah</option><option>Vermont</option>
+                    <option>Virginia</option><option>Washington</option><option>West Virginia</option>
+                    <option>Wisconsin</option><option>Wyoming</option>
+                  </optgroup>
+                  <optgroup label="Canada">
+                    <option>Alberta</option><option>British Columbia</option><option>Manitoba</option>
+                    <option>New Brunswick</option><option>Newfoundland and Labrador</option>
+                    <option>Northwest Territories</option><option>Nova Scotia</option><option>Nunavut</option>
+                    <option>Ontario</option><option>Prince Edward Island</option><option>Quebec</option>
+                    <option>Saskatchewan</option><option>Yukon</option>
+                  </optgroup>
+                </select>
+              </div>
+              <span class="field-error" id="ce-state"></span>
+            </div>
+
+            <div class="contact-field" id="cf-timezone">
+              <label for="c-timezone">Time Zone</label>
+              <div class="select-wrap">
+                <select class="contact-select" id="c-timezone" name="timezone">
+                  <option value="">Select time zone…</option>
+                  <optgroup label="United States">
+                    <option>Eastern (ET) — UTC−5/−4</option>
+                    <option>Central (CT) — UTC−6/−5</option>
+                    <option>Mountain (MT) — UTC−7/−6</option>
+                    <option>Pacific (PT) — UTC−8/−7</option>
+                    <option>Alaska (AKT) — UTC−9/−8</option>
+                    <option>Hawaii (HAT) — UTC−10</option>
+                  </optgroup>
+                  <optgroup label="Canada">
+                    <option>Newfoundland (NT) — UTC−3:30/−2:30</option>
+                    <option>Atlantic (AT) — UTC−4/−3</option>
+                    <option>Eastern (ET) — UTC−5/−4</option>
+                    <option>Central (CT) — UTC−6/−5</option>
+                    <option>Mountain (MT) — UTC−7/−6</option>
+                    <option>Pacific (PT) — UTC−8/−7</option>
+                  </optgroup>
+                </select>
+              </div>
+              <span class="field-error" id="ce-timezone"></span>
+            </div>
+
+            <div class="contact-field full" id="cf-hours">
+              <label for="c-hours">Preferred Contact Hours</label>
+              <div class="select-wrap">
+                <select class="contact-select" id="c-hours" name="preferred_hours">
+                  <option value="">Select a time window…</option>
+                  <option>8 AM – 10 AM (local)</option>
+                  <option>10 AM – 12 PM (local)</option>
+                  <option>12 PM – 2 PM (local)</option>
+                  <option>2 PM – 4 PM (local)</option>
+                  <option>4 PM – 6 PM (local)</option>
+                  <option>Evenings after 6 PM</option>
+                  <option>Weekends only</option>
+                  <option>Anytime — flexible</option>
+                </select>
+              </div>
+              <span class="field-error" id="ce-hours"></span>
+            </div>
+
+            <div class="contact-field full">
+              <div class="pref-label">Preferred Contact Method</div>
+              <div class="pref-toggle">
+                <input type="radio" id="pref-call" name="contact_preference" value="Call" checked/>
+                <label for="pref-call">
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                    <path d="M3.5 2h2.25l1 2.5L5.5 5.75a9.5 9.5 0 004.75 4.75L11.5 9.25l2.5 1V12.5a1 1 0 01-1 1C5.5 13.5 1.5 9.5 1.5 4.5a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Call me
+                </label>
+                <input type="radio" id="pref-text" name="contact_preference" value="Text"/>
+                <label for="pref-text">
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+                    <rect x="1.5" y="2" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.2"/>
+                    <path d="M4.5 13l3-2 3 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M4.5 6h6M4.5 8.5h4" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+                  </svg>
+                  Text me
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+          <button type="submit" class="contact-submit" id="contact-submit">
+            <span id="submit-text">Send My Request</span>
+            <span class="submit-spinner" id="submit-spinner"></span>
+            <svg id="submit-arrow" width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+        </form>
+      </div>
+
+      <!-- SUCCESS STATE -->
+      <div class="success-state" id="success-state">
+        <div class="success-icon">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <path d="M6 14l5 5 11-10" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <h2>Request Received!</h2>
+        <p>Thanks, <strong id="success-name"></strong>. We've got your info and will be in touch soon to schedule your discovery call.</p>
+        <div class="success-detail">
+          <div class="success-row">
+            <span class="pulse-dot"></span>
+            <span>Confirmation sent to <strong id="success-email"></strong></span>
+          </div>
+          <div class="success-row">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            <span>We'll reach out during your preferred window</span>
+          </div>
+          <div class="success-row">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3.5 2h2.25l1 2.5L5.5 5.75a9.5 9.5 0 004.75 4.75L11.5 9.25l2.5 1V12.5a1 1 0 01-1 1C5.5 13.5 1.5 9.5 1.5 4.5a1 1 0 011-1z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Via <strong id="success-pref"></strong> — <span id="success-phone"></span></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="runtime-config.js"></script>
+  <script src="app.js"></script>
+  <script>
+    /* ─── CONTACT FORM LOGIC ───────────────────── */
+    (function initContactForm() {
+
+      function apiUrl(path) {
+        var base = (window.NFINITY_API_BASE_URL || '').replace(/\/+$/, '');
+        return base + path;
+      }
+
+      var form        = document.getElementById('contact-form');
+      var submitBtn   = document.getElementById('contact-submit');
+      var submitTxt   = document.getElementById('submit-text');
+      var spinner     = document.getElementById('submit-spinner');
+      var arrow       = document.getElementById('submit-arrow');
+      var formState   = document.getElementById('form-state');
+      var successState = document.getElementById('success-state');
+
+      if (!form) return;
+
+      /* Field IDs for validation */
+      var REQUIRED = ['name', 'company', 'email', 'phone', 'state', 'timezone', 'hours'];
+
+      function getField(id) { return document.getElementById('c-' + id); }
+      function getWrap(id)  { return document.getElementById('cf-' + id); }
+      function getErr(id)   { return document.getElementById('ce-' + id); }
+
+      function setError(id, msg) {
+        const wrap = getWrap(id);
+        const err  = getErr(id);
+        if (wrap) wrap.classList.add('has-error');
+        if (err)  err.textContent = msg;
+      }
+
+      function clearError(id) {
+        const wrap = getWrap(id);
+        const err  = getErr(id);
+        if (wrap) wrap.classList.remove('has-error');
+        if (err)  err.textContent = '';
+      }
+
+      /* Clear errors live */
+      REQUIRED.forEach(id => {
+        const el = getField(id);
+        if (el) el.addEventListener('input', () => clearError(id));
+        if (el && el.tagName === 'SELECT') el.addEventListener('change', () => clearError(id));
+      });
+
+      function validate() {
+        let ok = true;
+        REQUIRED.forEach(id => clearError(id));
+
+        const name     = getField('name')?.value.trim()     || '';
+        const company  = getField('company')?.value.trim()  || '';
+        const email    = getField('email')?.value.trim()    || '';
+        const phone    = getField('phone')?.value.trim()    || '';
+        const state    = getField('state')?.value           || '';
+        const timezone = getField('timezone')?.value        || '';
+        const hours    = getField('hours')?.value           || '';
+
+        if (!name)                          { setError('name',     'Full name is required.'); ok = false; }
+        if (!company)                       { setError('company',  'Company name is required.'); ok = false; }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+                                            { setError('email',    'Please enter a valid email address.'); ok = false; }
+        if (!phone)                         { setError('phone',    'Phone number is required.'); ok = false; }
+        if (!state)                         { setError('state',    'Please select your state or province.'); ok = false; }
+        if (!timezone)                      { setError('timezone', 'Please select your time zone.'); ok = false; }
+        if (!hours)                         { setError('hours',    'Please select a preferred time window.'); ok = false; }
+
+        return ok;
+      }
+
+      function setLoading(on) {
+        submitBtn.disabled = on;
+        if (submitTxt) submitTxt.style.display = on ? 'none' : '';
+        if (spinner)   spinner.style.display   = on ? 'inline-block' : 'none';
+        if (arrow)     arrow.style.display     = on ? 'none' : '';
+      }
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!validate()) return;
+
+        // SECURITY: honeypot — if the hidden _honey field is filled, this is
+        // almost certainly a bot. Pretend success and silently drop.
+        const honey = form.querySelector('input[name="_honey"]');
+        if (honey && honey.value) {
+          formState.style.display    = 'none';
+          successState.style.display = 'block';
+          return;
+        }
+
+        setLoading(true);
+
+        // SECURITY: cap field lengths so a malicious payload can't blow up the
+        // outbound POST or backend log lines.
+        const cap = (s, n) => (s == null ? '' : String(s).slice(0, n));
+        const name  = cap(getField('name').value.trim(), 120);
+        const email = cap(getField('email').value.trim(), 254);
+        const phone = cap(getField('phone').value.trim(), 40);
+        const pref  = document.querySelector('input[name="contact_preference"]:checked')?.value || 'Call';
+
+        const payload = {
+          name:                name,
+          email:               email,
+          company:             cap(getField('company').value.trim(), 120),
+          phone:               phone,
+          state:               cap(getField('state').value, 60),
+          timezone:            cap(getField('timezone').value, 80),
+          preferred_hours:     cap(getField('hours').value, 60),
+          contact_preference:  ['Call','Text'].includes(pref) ? pref : 'Call',
+          botcheck:            '',
+        };
+
+        try {
+          const res = await fetch(apiUrl('/api/submit-lead'), {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body:    JSON.stringify(payload),
+          });
+
+          let data;
+          try { data = await res.json(); } catch (_) { data = {}; }
+
+          if (res.ok && data.success) {
+            document.getElementById('success-name').textContent  = name.split(' ')[0];
+            document.getElementById('success-email').textContent = email;
+            document.getElementById('success-pref').textContent  = pref;
+            document.getElementById('success-phone').textContent = phone;
+
+            formState.style.display    = 'none';
+            successState.style.display = 'block';
+            // Trigger checkmark animation on next paint
+            requestAnimationFrame(function() {
+              requestAnimationFrame(function() {
+                successState.classList.add('success-visible');
+              });
+            });
+          } else {
+            throw new Error(
+              (typeof data.error === 'string' && data.error)
+                ? data.error
+                : 'Submission failed. Please try again.'
+            );
+          }
+        } catch (err) {
+          setLoading(false);
+          var errEl = document.getElementById('form-error');
+          if (!errEl) {
+            errEl = document.createElement('p');
+            errEl.id = 'form-error';
+            errEl.style.cssText = 'margin:12px 0 0;font-size:13px;color:#ef4444;text-align:center';
+            submitBtn.parentNode.insertBefore(errEl, submitBtn.nextSibling);
+          }
+          errEl.textContent = (err && err.message) ? err.message : 'Something went wrong. Please try again.';
+        }
+      });
+
+    })(); // end initContactForm
+  </script>
+</body>
+</html>

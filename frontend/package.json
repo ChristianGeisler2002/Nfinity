@@ -1,0 +1,17 @@
+{
+  "name": "nfinityhq-frontend",
+  "version": "1.0.0",
+  "description": "NfinityHQ static client portal and operations demo",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "scripts/serve-dist.js",
+  "scripts": {
+    "build": "node scripts/build-amplify.js",
+    "preview": "node scripts/serve-dist.js",
+    "start": "npm run build && npm run preview",
+    "dev": "npm run start"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

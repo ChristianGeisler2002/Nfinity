@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="/public/ux.css">
+  <script defer src="/public/ux.js"></script>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="NfinityHQ — Secure client portal login."/>
+  <title>Client Login — NFINITY HQ</title>
+  <!-- ─── Security headers (set the same values at the edge/CDN as real HTTP headers) ─── -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <base href="/public/">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .login-page-wrap {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+    .login-page-logo {
+      margin-bottom: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="galaxy"></canvas>
+  <div class="orb" id="orb-1"></div>
+  <div class="orb" id="orb-2"></div>
+  <div class="orb" id="orb-3"></div>
+  <div class="orb" id="orb-4"></div>
+
+  <div class="login-page-wrap">
+
+    <div class="login-page-logo">
+      <div class="logo">
+        <span class="logo-n">N</span><span class="logo-rest">finityHQ</span>
+        <div class="logo-dot"></div>
+      </div>
+    </div>
+
+    <div class="login-card-wrap" style="padding:0;margin:0">
+      <div class="login-card" id="login-card">
+
+        <div class="card-top-line"></div>
+        <div class="card-glow"></div>
+
+        <div class="card-header">
+          <p class="card-sub">Sign in to your client portal</p>
+        </div>
+
+        <form id="login-form" novalidate>
+
+          <div class="field-group" id="fg-email">
+            <label for="email">Email or Username</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <path d="M2 4l5.5 4.5L13 4M2 4h11v9H2V4z" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/>
+              </svg>
+              <input type="text" id="email" name="email" placeholder="you@example.test" autocomplete="username"/>
+            </div>
+            <span class="field-error" id="err-email"></span>
+          </div>
+
+          <div class="field-group" id="fg-password">
+            <label for="password">Password</label>
+            <div class="input-wrap">
+              <svg class="input-icon" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                <rect x="2.5" y="7" width="11" height="7.5" rx="1.5" stroke="currentColor" stroke-width="1.25"/>
+                <path d="M5 7V5.5a3 3 0 016 0V7" stroke="currentColor" stroke-width="1.25" stroke-linecap="round"/>
+              </svg>
+              <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password"/>
+              <button type="button" id="toggle-pw" aria-label="Toggle password">
+                <svg id="eye-svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                  <path d="M1.5 7.5s2.3-4.5 6-4.5 6 4.5 6 4.5-2.3 4.5-6 4.5-6-4.5-6-4.5z" stroke="currentColor" stroke-width="1.2"/>
+                  <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/>
+                </svg>
+              </button>
+            </div>
+            <span class="field-error" id="err-password"></span>
+          </div>
+
+          <div class="form-row">
+            <label class="check-label">
+              <input type="checkbox" id="remember"/>
+              <span class="check-box"></span>
+              Remember me
+            </label>
+            <a href="forgot.html" class="forgot-link">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn-primary btn-full" id="btn-submit">
+            <span id="btn-text">Sign In</span>
+            <span class="spinner" id="spinner"></span>
+          </button>
+
+          <div class="login-note">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.1"/>
+              <path d="M6 5.5v2.5M6 4v.01" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+            </svg>
+            Authorized users are automatically routed to their designated system after login.
+          </div>
+
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="runtime-config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

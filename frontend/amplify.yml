@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    # Publish ONLY the files the browser needs. Everything else (package.json,
+    # lockfiles, docs, .claude, internal setup files) stays off the CDN.
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*

@@ -1,0 +1,1 @@
+{ "autoCreateTaskOnCompliance": true, "autoCreateTaskOnOverdueInvoice": true, "notifyOnHighRisk": true, "dailyDigest": true }

@@ -1,0 +1,25 @@
+{
+  "name": "nfinityhq-backend",
+  "version": "1.0.0",
+  "description": "NfinityHQ Express API for accounts, teams, leads, and uploads",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "client:create": "node scripts/create-client.js"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.835.0",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^2.1.1",
+    "resend": "^4.0.0"
+  }
+}

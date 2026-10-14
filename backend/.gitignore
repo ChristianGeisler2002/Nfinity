@@ -1,0 +1,21 @@
+# Environment — never commit secrets
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+uploads/
+logs/
+
+# Captured lead data — contains customer PII, never commit
+data/
+*.leads.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
