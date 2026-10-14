@@ -2,6 +2,8 @@
 
 The frontend contains the public pages, account screens, and interactive business operations demo. It uses HTML, CSS, and vanilla JavaScript. The older JSX files are retained prototypes and are not needed to build or run the active interface.
 
+I keep the frontend as static HTML, CSS, and JavaScript so it can run behind Express or on static hosting. Node.js is only needed for the build and preview scripts. Browser `fetch` calls the Express account, team, lead, and upload routes; the guest demo uses browser-local sample records. No provider credentials belong here.
+
 From this directory:
 
 ```powershell

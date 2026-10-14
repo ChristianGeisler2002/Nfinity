@@ -1,10 +1,28 @@
 # NfinityHQ
 
-NfinityHQ brings a client portal and a business operations demo together with an Express API for accounts, team management, lead capture, password resets, and file uploads.
+I built NfinityHQ as a client portal and business operations demo. The Express API handles accounts, teams, lead capture, password resets, and uploads. The workspace also includes interactive demo features, which are listed below.
 
 The frontend and backend stay separate in one repository. Browser assets have one home under `frontend/`; the backend serves those assets during local development. The frontend can also build a static artifact for separate hosting.
 
 ![Operations dashboard](docs/screenshots/dashboard.jpg)
+
+## Stack and why I used it
+
+| Part | Technology | Reason |
+| --- | --- | --- |
+| Pages and workspace | HTML, CSS, vanilla JavaScript | Keeps the active frontend simple to serve and build as static files. |
+| API | Node.js, Express | Uses JavaScript on both sides and keeps routes easy to follow. |
+| Passwords and sessions | bcryptjs, JSON Web Tokens | Hashes account passwords and checks signed sessions on protected routes. |
+| Local configuration | dotenv, environment variables | Keeps deployment secrets outside the source. |
+| Data | Local JSON files | Makes this version easy to run on one server without a database service. |
+| Email | Resend API | Sends invitations, password resets, and lead notifications. |
+| Alerts | Telegram Bot API | Sends optional lead notifications to a private chat. |
+| Files | Multer, AWS SDK for JavaScript, Amazon S3 API | Validates uploads and supports local development storage or production object storage. |
+| Builds and tests | Node scripts, Node's test runner | Builds the static frontend and tests API/storage behavior without another framework. |
+
+The main languages are JavaScript, HTML, and CSS. JSON stores configuration and local records. Older JSX prototypes remain as references; the active frontend does not require React. JSON storage suits a small single-process version, but a shared production service would need a database and stronger session handling.
+
+The browser calls the Express API over HTTP locally or HTTPS when deployed. Resend, Telegram, and S3 calls stay on the backend. Only the public API origin is sent to the browser; keys, signing secrets, account stores, and uploads stay private. See the [API README](backend/README.md) for routes and [environment example](backend/.env.example) for configuration names.
 
 ## Working features and demo features
 

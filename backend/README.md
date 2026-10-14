@@ -2,6 +2,10 @@
 
 The API handles existing-account login, password resets, company team management, lead intake, and uploads. The integrated server serves the sibling `frontend` directory.
 
+I use Node.js and Express for the HTTP routes, bcryptjs for password hashes, and jsonwebtoken for signed sessions. Multer handles multipart uploads, dotenv reads local configuration, Resend sends email, Telegram receives optional alerts, and the AWS S3 SDK handles production file storage. JSON files keep the local version easy to run, with atomic replacement for the main stores. Keep this version on one writer process.
+
+All service keys and private chat IDs come from environment variables. The source includes configuration names in `.env.example`, with no live credentials or account data. External integration code stays here rather than in browser assets.
+
 From this directory, run `npm ci`, copy `.env.example` to `.env`, and run `npm start`. The development listener uses `127.0.0.1:3000`. `npm run client:create` creates a local company owner or admin; employee accounts are added through the authenticated team API.
 
 | Route | Purpose |
