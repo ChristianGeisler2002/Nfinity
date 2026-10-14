@@ -1,47 +1,39 @@
 # NfinityHQ
 
-I built NfinityHQ as a client portal and business operations demo. The Express API handles accounts, teams, lead capture, password resets, and uploads. The workspace also includes interactive demo features, which are listed below.
+## Problem
 
-The frontend and backend stay separate in one repository. Browser assets have one home under `frontend/`; the backend serves those assets during local development. The frontend can also build a static artifact for separate hosting.
+Business work can get spread across task lists, spreadsheets, email, and separate account tools. I wanted to bring the main pieces into one workspace so it was easier to see what needed attention and move between tasks, people, and client activity.
 
-![Operations dashboard](docs/screenshots/dashboard.jpg)
+I also wanted a way to demonstrate the idea without putting real customer accounts or business records online. That meant keeping the public demo separate from the backend features that need authentication or private service credentials.
 
-## Stack and why I used it
+## Solution
 
-| Part | Technology | Reason |
+I built NfinityHQ as a client portal with an interactive operations demo and an Express API. The workspace brings together tasks, team members, CRM views, uploads, alerts, and reporting screens. The API handles real account login, password resets, company-scoped team management, lead intake, and file uploads.
+
+The guest workspace uses sample data and browser-local changes. Tasks, CRM activity, analytics, automation, and file previews are demo features; the demo upload screen does not send file bytes to the upload API. Keeping those boundaries clear lets someone explore the project without accessing a real company workspace.
+
+![NfinityHQ operations dashboard with demonstration data](docs/screenshots/dashboard.jpg)
+
+![NfinityHQ task screen with sample work](docs/screenshots/tasks.jpg)
+
+## Stack and Explanation
+
+| Part of the source | Stack | What it does and why |
 | --- | --- | --- |
-| Pages and workspace | HTML, CSS, vanilla JavaScript | Keeps the active frontend simple to serve and build as static files. |
-| API | Node.js, Express | Uses JavaScript on both sides and keeps routes easy to follow. |
-| Passwords and sessions | bcryptjs, JSON Web Tokens | Hashes account passwords and checks signed sessions on protected routes. |
-| Local configuration | dotenv, environment variables | Keeps deployment secrets outside the source. |
-| Data | Local JSON files | Makes this version easy to run on one server without a database service. |
-| Email | Resend API | Sends invitations, password resets, and lead notifications. |
-| Alerts | Telegram Bot API | Sends optional lead notifications to a private chat. |
-| Files | Multer, AWS SDK for JavaScript, Amazon S3 API | Validates uploads and supports local development storage or production object storage. |
-| Builds and tests | Node scripts, Node's test runner | Builds the static frontend and tests API/storage behavior without another framework. |
+| `frontend/public/` | HTML, CSS, JavaScript | Holds public pages, login, password reset, and shared UI behavior. Static files keep the active frontend straightforward to host. |
+| `frontend/apps/demo/` | HTML, CSS, vanilla JavaScript | Implements the workspace, navigation, forms, and sample workflows. Older JSX files are reference prototypes, not a required React build. |
+| `frontend/core/`, `frontend/client_configs/` | JavaScript, JSON, browser fetch/localStorage | Provides API helpers, scenario simulations, and demo configuration. The browser can try the workspace independently of live accounts. |
+| `backend/server.js`, `backend/api/` | Node.js, Express | Sets up HTTP routes, static serving, errors, and shutdown. JavaScript is shared across the frontend and backend. |
+| `backend/core/auth/` | bcryptjs, jsonwebtoken, Node crypto | Hashes passwords, signs sessions, checks account roles, and manages reset tokens. Company permissions are enforced on the server. |
+| `backend/core/storage/` | JSON files, Node filesystem APIs | Stores accounts and application records with atomic replacement for the main stores. This keeps local setup small, with a single writer process. |
+| Email and alerts | Resend API, Telegram Bot API | Sends invitations, resets, and optional lead notifications from the backend. |
+| `backend/core/uploads/` | Multer, AWS SDK for JavaScript, Amazon S3 API | Validates multipart uploads and stores bytes locally in development or in S3 in production. |
+| Environment configuration | dotenv, environment variables | Keeps service credentials, signing secrets, and private storage paths outside browser assets and Git. |
+| Build scripts and `tests/` | Node scripts, Node's test runner | Builds the static frontend and checks syntax, authentication, company isolation, uploads, and storage behavior. |
 
-The main languages are JavaScript, HTML, and CSS. JSON stores configuration and local records. Older JSX prototypes remain as references; the active frontend does not require React. JSON storage suits a small single-process version, but a shared production service would need a database and stronger session handling.
+The main languages are JavaScript, HTML, and CSS, with JSON for configuration and local records. A login returns a JWT; protected requests send it as a Bearer token. The API reloads the account and checks company and role before allowing changes. Lead submissions save before optional notifications, and uploaded file bytes are stored separately from their metadata. The [backend README](backend/README.md) lists the routes.
 
-The browser calls the Express API over HTTP locally or HTTPS when deployed. Resend, Telegram, and S3 calls stay on the backend. Only the public API origin is sent to the browser; keys, signing secrets, account stores, and uploads stay private. See the [API README](backend/README.md) for routes and [environment example](backend/.env.example) for configuration names.
-
-## Working features and demo features
-
-| Area | Current behavior |
-| --- | --- |
-| Login | Authenticates onboarded server accounts and returns a JWT |
-| Team members | Uses the API with a real session; guests use a browser-local demonstration team |
-| Password reset and invites | Backend flows use Resend when configured |
-| Lead capture | Saves leads locally; optional Resend and Telegram notifications |
-| Upload API | Saves bytes locally in development and to S3 in production |
-| Tasks and file previews | Browser-local demonstration records; previews do not download real files |
-| CRM, outreach, pipeline | Interactive sample workflows; changes are not a shared server workspace |
-| Analytics, ROI, automation, virtual employees | Simulated activity and demonstration metrics |
-
-The guest demo is intentionally public. It does not grant backend permissions. The demo upload screen currently manages file metadata; it is not wired to the upload API. Production accounts are created manually, not through public signup.
-
-## Start locally
-
-Use Node.js 22 or newer. Node 24 was used for verification.
+For local development, use Node.js 22 or newer:
 
 ```powershell
 npm ci --prefix backend
@@ -49,90 +41,19 @@ Copy-Item backend/.env.example backend/.env
 npm start
 ```
 
-Open `http://127.0.0.1:3000` for the homepage or `http://127.0.0.1:3000/apps/demo/` for the guest workspace. External credentials are optional for these local flows. Logs explain which notification services are unconfigured. Real email, Telegram delivery, and S3 uploads require their own configuration.
+Open `http://127.0.0.1:3000`, or `/apps/demo/` for the guest workspace. Run `npm run client:create` from `backend/` to create a local company owner/admin. Team members are then managed through the signed-in API; there is no public signup.
 
-For an account in your local development store:
-
-```powershell
-cd backend
-npm run client:create
-```
-
-The onboarding command creates a company owner or admin, hashes its temporary password, and prints the password once. Team members can then be added from the signed-in workspace. No existing users or customer records ship with the source.
-
-## Frontend build and split hosting
+The [environment example](backend/.env.example) documents `JWT_SECRET`, allowed origins, Resend, Telegram, S3, and storage settings. External services are optional for local demo use. Production requires a strong signing secret, persistent storage, and private credentials. Only `NFINITY_API_BASE_URL`, a public backend origin, is included in a static frontend build:
 
 ```powershell
 npm ci --prefix frontend
 $env:NFINITY_API_BASE_URL = "http://127.0.0.1:3000"
 npm run build
 npm run preview
-```
-
-The static preview runs at `http://127.0.0.1:4173`. Allow that origin in the backend's `ALLOWED_ORIGINS`. The build copies browser assets into `frontend/dist`, writes a public API origin into runtime configuration, and updates the page connection policy. It does not copy backend code, customer stores, or environment files.
-
-For a deployment build, set `NFINITY_API_BASE_URL` to the backend's HTTPS origin. Production/CI builds require that variable. Only loopback origins may use HTTP. Runtime configuration contains a public URL, never an API credential.
-
-## Configuration
-
-See [backend/.env.example](backend/.env.example) for the supported values.
-
-| Values | Purpose |
-| --- | --- |
-| `NODE_ENV`, `PORT`, `HOST` | Runtime mode and listener; local development defaults to loopback |
-| `JWT_SECRET`, `SESSION_TTL` | Session signing and lifetime; production requires a random secret of at least 32 characters |
-| `APP_URL`, `APP_BASE_URL` | Frontend page base used in invitation and reset links; include `/public` for the local server |
-| `ALLOWED_ORIGINS` | Browser origins allowed to call the API |
-| `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `ADMIN_EMAIL` | Transactional and lead email |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Optional lead alerts |
-| `AWS_REGION`, `S3_BUCKET_NAME`, `S3_PUBLIC_BASE_URL` | Production upload storage; credentials come from the SDK's provider chain |
-| `USERS_FILE`, `LEADS_FILE`, `FILES_FILE`, `RESET_TOKENS_FILE`, `AUDIT_FILE`, `UPLOAD_DIR` | Optional persistent storage locations |
-
-Development sessions use a temporary random secret when none is configured, so restarting the server invalidates those sessions. The frontend retains the existing localStorage bearer-token format. This is a known deployment limitation; it is not an HttpOnly-cookie session implementation.
-
-## Architecture
-
-```text
-frontend/
-  public/             Marketing, login, reset pages, shared UI behavior
-  apps/demo/          Workspace HTML, demo.js, demo.css, preserved prototypes
-  core/               Browser API client and automation scenarios
-  client_configs/     Demonstration branding and module configuration
-  scripts/            Static build and preview server
-backend/
-  server.js           Express setup, static serving, errors, shutdown
-  api/                Auth, team, leads, uploads
-  core/auth/          Accounts, password hashing, sessions, reset tokens, audit
-  core/storage/       Local stores and atomic JSON replacement
-  core/uploads/       Upload validation and local/S3 storage
-  scripts/            Manual company onboarding
-tests/                API and storage regression tests
-scripts/              Source syntax check
-```
-
-The active interface uses HTML, CSS, and vanilla JavaScript. Older JSX prototypes are retained as references and are not a React build dependency. The API uses Express 4, bcryptjs, jsonwebtoken, Multer, Resend, and the AWS S3 SDK.
-
-A login request returns a signed token. Team requests send that token as a Bearer header; the server reloads the account and checks company and role before changing data. Lead submissions validate and save their payload before optional delivery. The upload route validates a multipart file and saves metadata separately from its bytes.
-
-Accounts, leads, file metadata, audit records, and reset tokens use JSON files in this version. Account, reset, lead, and file writes use atomic replacement, and corrupt stores are not silently reset. This is a single-process storage design, not a PostgreSQL implementation. Persistent disk and backups are required; multiple server instances can overwrite each other's JSON changes. Do not use ephemeral deployment storage for real accounts.
-
-## Verification
-
-```powershell
 npm run check
 npm test
-npm run build
-npm audit --prefix backend
 ```
 
-The source check parses JavaScript files and inline page scripts. API tests use temporary users and files, covering login, team isolation, disabled accounts, uploads, private-file access, and malformed bodies. Storage tests cover replacement and corrupt data. Browser checks cover task creation, section navigation, modal behavior, and a 390px layout. External email delivery, Telegram messages, AWS deployment, and S3 production uploads have not been exercised with live credentials.
+The preview uses `http://127.0.0.1:4173`; allow that origin in the backend. Production builds require an HTTPS API origin. See the [frontend README](frontend/README.md), [frontend deployment guide](frontend/docs/AMPLIFY_LAUNCH.md), [backend deployment guide](backend/docs/ELASTIC_BEANSTALK_LAUNCH.md), and [onboarding guide](backend/docs/FIRST_CLIENT_ONBOARDING.md) for details.
 
-![Task list after creating a task](docs/screenshots/tasks.jpg)
-
-## Deployment notes
-
-Keep the API and frontend directories together when deploying the integrated server. For a static frontend, publish only `frontend/dist`. See [frontend deployment](frontend/docs/AMPLIFY_LAUNCH.md), [backend deployment](backend/docs/ELASTIC_BEANSTALK_LAUNCH.md), and [onboarding](backend/docs/FIRST_CLIENT_ONBOARDING.md).
-
-Browse the application source directly in [`frontend/`](frontend/) and [`backend/`](backend/). Environment files, user stores, uploads, dependency folders, old archives, and local tool settings are excluded from the published source.
-
-The source retains its existing unlicensed status. No open-source license has been inferred or added.
+JSON storage is intended for one server process, and sessions currently use localStorage bearer tokens. Shared production storage and stronger session handling remain future work. Local API/storage tests and browser flows were verified; live Resend delivery, Telegram messages, S3 uploads, and cloud deployment were not. Private records, credentials, uploads, and dependency folders are excluded from the public source.

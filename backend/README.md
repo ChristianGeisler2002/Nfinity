@@ -1,25 +1,52 @@
-# NfinityHQ API
+# NfinityHQ Backend
 
-The API handles existing-account login, password resets, company team management, lead intake, and uploads. The integrated server serves the sibling `frontend` directory.
+## Problem
 
-I use Node.js and Express for the HTTP routes, bcryptjs for password hashes, and jsonwebtoken for signed sessions. Multer handles multipart uploads, dotenv reads local configuration, Resend sends email, Telegram receives optional alerts, and the AWS S3 SDK handles production file storage. JSON files keep the local version easy to run, with atomic replacement for the main stores. Keep this version on one writer process.
+The portal needed a server to handle accounts, team permissions, password resets, leads, and uploads. Those operations could not safely depend on whatever the browser sent, especially when users from different companies share the same application.
 
-All service keys and private chat IDs come from environment variables. The source includes configuration names in `.env.example`, with no live credentials or account data. External integration code stays here rather than in browser assets.
+I also needed email, alerts, and file storage without putting provider credentials in the frontend. For this version, I wanted local development to stay manageable without setting up a separate database service.
 
-From this directory, run `npm ci`, copy `.env.example` to `.env`, and run `npm start`. The development listener uses `127.0.0.1:3000`. `npm run client:create` creates a local company owner or admin; employee accounts are added through the authenticated team API.
+## Solution
 
-| Route | Purpose |
+I built an Express API that checks the signed-in account, its company, and its role before allowing protected changes. It handles account login and password resets, manages company team members, accepts lead submissions, and validates file uploads. The same server can serve the sibling frontend during development.
+
+Records are stored in local JSON files, while notification and production file-storage integrations run on the server. Configuration comes from environment variables, so the public source includes the integration code and setup names without including live keys, accounts, or customer files.
+
+## Stack and Explanation
+
+| Source or service | Stack | What it does and why |
+| --- | --- | --- |
+| `server.js`, `api/` | Node.js, Express | Sets up routing, static serving, request handling, errors, and shutdown in the same language as the frontend. |
+| `core/auth/` | bcryptjs, jsonwebtoken, Node crypto | Hashes passwords, signs sessions, checks permissions, and manages resets and audit records. Company identity comes from the authenticated account. |
+| `core/storage/` | JSON, Node filesystem APIs | Keeps local setup small. Atomic replacement protects the main stores from partially written files, with one writer process. |
+| `core/uploads/` | Multer, AWS SDK for JavaScript | Validates multipart files and separates their bytes from metadata. Development uses local disk; production uses the S3 API. |
+| Email | Resend API | Sends password resets, invitations, and lead notifications without exposing the email key to the browser. |
+| Alerts | Telegram Bot API | Sends optional lead alerts to a privately configured chat. |
+| `.env.example` | dotenv, environment variables | Documents supported settings while actual secrets remain in local or deployment configuration. |
+| `scripts/` and root `tests/` | JavaScript, Node's test runner | Creates company accounts manually and verifies API permissions, input errors, uploads, and storage behavior. |
+
+| API route | Responsibility |
 | --- | --- |
 | `GET /healthz` | Process health |
-| `POST /api/auth/login` | Authenticate an onboarded account |
-| `POST /api/auth/forgot-password` | Request a reset email |
+| `POST /api/auth/login` | Authenticate an existing account |
+| `POST /api/auth/forgot-password` | Request a password-reset email |
 | `GET /api/auth/reset-password` | Check a reset token |
 | `POST /api/auth/reset-password` | Consume a reset token |
-| `PATCH /api/auth/users/:userId/password` | Authorized password change |
-| `/api/team` | Company-scoped listing and management |
-| `POST /api/submit-lead` | Validate and save a contact request |
-| `POST /api/uploads` | Multipart upload under the `file` field |
+| `PATCH /api/auth/users/:userId/password` | Change a password with authorization |
+| `/api/team` and its member routes | List, create, update, reset, and disable company members |
+| `POST /api/submit-lead` | Validate and save a lead before optional notifications |
+| `POST /api/uploads` | Accept a multipart file under the `file` field |
 
-Data uses local JSON files. Configure persistent paths before deployment and keep one writer process. Production uploads use S3; notifications use Resend and optionally Telegram. A production JWT secret is required at startup. No public registration, task API, PostgreSQL store, or browser download endpoint is implemented in this version.
+A login returns a JWT. Protected routes verify it, reload the account, and check current permissions. Uploads are checked before their bytes and metadata are saved. Browser demo tasks and reporting screens do not have shared server APIs in this version.
 
-See the [main README](../README.md) for architecture, frontend hosting, configuration, test commands, and verification limits.
+From this folder, use Node.js 22 or newer:
+
+```powershell
+npm ci
+Copy-Item .env.example .env
+npm start
+```
+
+The development listener is `127.0.0.1:3000`. `npm run client:create` creates a company owner/admin; team management adds employees after login. Production needs a strong `JWT_SECRET`, allowed frontend origins, persistent data paths, and private service configuration. AWS credentials come from the SDK's provider chain. See [.env.example](.env.example) for supported names.
+
+Run `npm test` from the repository root for API and storage checks. Local login, company isolation, disabled accounts, uploads, malformed bodies, and corrupt storage were tested. Live email, Telegram, S3, and deployment were not. JSON files require a single writer process; PostgreSQL, public registration, and a browser file-download endpoint are not implemented. See the [project README](../README.md), [deployment guide](docs/ELASTIC_BEANSTALK_LAUNCH.md), and [onboarding guide](docs/FIRST_CLIENT_ONBOARDING.md) for the wider setup.
