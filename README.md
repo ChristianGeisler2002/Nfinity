@@ -115,6 +115,6 @@ The source check parses JavaScript files and inline page scripts. API tests use 
 
 Keep the API and frontend directories together when deploying the integrated server. For a static frontend, publish only `frontend/dist`. See [frontend deployment](frontend/docs/AMPLIFY_LAUNCH.md), [backend deployment](backend/docs/ELASTIC_BEANSTALK_LAUNCH.md), and [onboarding](backend/docs/FIRST_CLIENT_ONBOARDING.md).
 
-Existing repository history may contain the previous ZIP uploads and data stores. Review and sanitize that history before public publication. The working source excludes environment files, user stores, uploads, dependency folders, old archives, and local tool settings. Repository visibility and history changes require a separate approval.
+Browse the application source directly in [`frontend/`](frontend/) and [`backend/`](backend/). Environment files, user stores, uploads, dependency folders, old archives, and local tool settings are excluded from the published source.
 
-The source retains its existing unlicensed/private status. No open-source license has been inferred or added.
+The source retains its existing unlicensed status. No open-source license has been inferred or added.
